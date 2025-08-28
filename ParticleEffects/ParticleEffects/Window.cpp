@@ -51,8 +51,8 @@ void Window::Init()
 
 	m_hWindow = CreateWindowExW(//HWND CreateWindowExW(
 		0,						//[in]			 DWORD	   dwExStyle,
-		CLASS_NAME,				//[in, optional] LPCSTR    lpClassName,
-		WINDOW_NAME,			//[in, optional] LPCSTR    lpWindowName,
+		Window::CLASS_NAME,		//[in, optional] LPCSTR    lpClassName,
+		Window::WINDOW_NAME,	//[in, optional] LPCSTR    lpWindowName,
 		WS_OVERLAPPEDWINDOW,	//[in]           DWORD     dwStyle,
 		CW_USEDEFAULT,			//[in]           int       X,
 		CW_USEDEFAULT,			//[in]           int       Y,

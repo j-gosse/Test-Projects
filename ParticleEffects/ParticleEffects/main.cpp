@@ -1,11 +1,11 @@
 /*! \file       ParticleEffects
-    \version    1.0
+    \version    1.1
     \desc	    Windows application for testing various particle rendering effects.
     \author     Jacob Gosse
     \date       August 28, 2025
 
-    \msvc       /std:c++20
-    \gnuc       -m64 -std=c++20
+    \MSVC       /std:c++20
+    \GNUC       -m64 -std=c++20
 
    Copyright 2025 Jacob Gosse
 
@@ -39,7 +39,6 @@
     Red = 0xFF0000FF
     Green = 0x00FF00FF
     Blue = 0x0000FFFF
-    Yellow = 0xFFFF00FF
     255 = 0xFF
 
     COLORS & BIT SHIFTING
@@ -194,9 +193,9 @@ int main()
 
         return 0;
     }
-    catch (const std::exception& e)
+    catch (const std::exception& error)
     {
-        std::wstring errMsg = std::wstring(L"Error: ") + std::wstring(e.what(), e.what() + strlen(e.what()));
+        std::wstring errMsg = std::wstring(L"Error: ") + std::wstring(error.what(), error.what() + strlen(error.what()));
         MessageBoxExW(nullptr, errMsg.c_str(), L"Fatal Error!", MB_OK | MB_ICONERROR, LANG_USER_DEFAULT);
         return -1;
     }
