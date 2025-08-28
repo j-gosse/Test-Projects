@@ -1,7 +1,5 @@
 #include "Window.hpp"
 
-#include <iostream>
-
 /* CONSTRUCTOR */
 
 Window::Window()

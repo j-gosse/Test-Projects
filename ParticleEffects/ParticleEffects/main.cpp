@@ -162,8 +162,6 @@ std::unique_ptr<Window, MyDeleter> ptr;
 
 #include "Window.hpp"
 
-#include <iostream>
-
 int main()
 {
     try
