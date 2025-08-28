@@ -1,5 +1,5 @@
 /*! \file       ParticleEffects
-    \version    1.2
+    \version    1.3
     \desc	    Windows application for testing various particle rendering effects.
     \author     Jacob Gosse
     \date       August 28, 2025
@@ -161,6 +161,7 @@ std::unique_ptr<Window, MyDeleter> ptr;
 */
 
 #include "Window.hpp"
+#include "Swarm.hpp"
 
 int main()
 {
@@ -172,6 +173,9 @@ int main()
 
         std::unique_ptr<Window, std::default_delete<Window>> window = std::make_unique<Window>();
         window->Init();
+
+        std::unique_ptr<Swarm, std::default_delete<Swarm>> swarm = std::make_unique<Swarm>();
+        swarm->Init(window->GetWindow());
 
         while (window->ProcessMessages())
         {
@@ -185,11 +189,18 @@ int main()
                 obj->Render(window->GetWindow());
             */
 
+            swarm->Update(window->GetWindow(), elapsedTime);
+            swarm->Render(window->GetWindow());
+
             Sleep(16);  // simulate ~60 FPS
         }
 
+        swarm.reset();
+        swarm = nullptr;
+
         window.reset();
         window = nullptr;
+
         std::wcout << L"Application exited successfully." << std::endl;
 
         return 0;

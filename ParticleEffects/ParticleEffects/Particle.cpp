@@ -1,8 +1,8 @@
 #include "Particle.hpp"
 
 #include <cmath>
-#include <cstdlib>
 #include <numbers>
+#include <cstdlib>
 
 /* CONSTRUCTOR */
 

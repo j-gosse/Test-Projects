@@ -17,8 +17,8 @@ private:
 
 	static constexpr const uint32_t WINDOW_WIDTH = 800;
 	static constexpr const uint32_t WINDOW_HEIGHT = 600;
-	static constexpr const wchar_t CLASS_NAME[] = L"Window Class";
-	static constexpr const wchar_t WINDOW_NAME[] = L"Window Title";
+	static constexpr const wchar_t CLASS_NAME[] = L"MainWindowClass";
+	static constexpr const wchar_t WINDOW_NAME[] = L"Particle Effects";
 
 	/**
 	* @brief	Function to deliver specific messages to a window.

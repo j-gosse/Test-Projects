@@ -21,7 +21,7 @@ public:
 	void Init();
 	void Update();
 
-	static constexpr const uint32_t NUM_PARTICLES = 1000;
+	static constexpr const uint32_t NUM_PARTICLES = 5000;
 	static constexpr const float RGBA_MIN = 0.0;
 	static constexpr const float RGBA_MAX = 255.0;
 

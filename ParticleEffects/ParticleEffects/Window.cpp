@@ -131,7 +131,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_CLOSE:
 		std::wcout << L"CASE: WM_CLOSE" << '\n';
-		if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"Window Title", MB_OKCANCEL) == IDOK)
+		if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"Particle Effects", MB_OKCANCEL) == IDOK)
 		{
 			Window::Cleanup();
 		}
