@@ -4,7 +4,6 @@
 #define WINDOW_HPP_
 
 #include <windows.h>
-#include <iostream>
 #include <stdexcept>
 
 class Window
