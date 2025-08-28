@@ -1,5 +1,5 @@
 /*! \file       ParticleEffects
-    \version    1.1
+    \version    1.2
     \desc	    Windows application for testing various particle rendering effects.
     \author     Jacob Gosse
     \date       August 28, 2025
@@ -62,13 +62,14 @@
     RENDERING PIXELS
     ----------------
     // create a vector to hold the pixel data, vector is of type uint32_t because a color value consists of 32 bits
-    std::vector<uint32_t> pixelBuffer;
+    std::vector<uint32_t> m_buffer;
 
     // allocate memory to pixel buffer
-    pixelBuffer = std::vector<uint32_t>(WINDOW_WIDTH * WINDOW_HEIGHT);
+    m_buffer.resize(static_cast<unsigned long long>(width) * height * 4);
+    m_buffer = std::vector<uint32_t>(WINDOW_WIDTH * WINDOW_HEIGHT);
 
     // clear pixel buffer
-    std::fill(pixelBuffer.begin(), pixelBuffer.end(), 0);
+    std::fill(m_buffer.begin(), m_buffer.end(), 0xFF000000);
 
     // DrawPixel accepts x,y positions, width, height, and color. Each position (pixel) in the buffer is assigned a color
     void DrawPixel(int x, int y, int width, int height, uint32_t color)
