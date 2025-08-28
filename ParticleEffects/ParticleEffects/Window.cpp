@@ -165,7 +165,8 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 void Window::LogLastError(const wchar_t* desc) {
 	DWORD eCode = GetLastError();
 
-	if (eCode == 0) {
+	if (eCode == 0)
+	{
 		std::wcout << desc << L": No error." << std::endl;
 		return;
 	}
