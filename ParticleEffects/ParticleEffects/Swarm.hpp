@@ -13,6 +13,7 @@ class Swarm : public Particle
 private:
 	Particle* m_particles;
 	std::vector<uint32_t> m_buffer;
+	ULONGLONG m_prevTime;
 
 public:
 	Swarm();

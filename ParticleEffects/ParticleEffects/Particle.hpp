@@ -18,8 +18,7 @@ public:
 	Particle();
 	virtual ~Particle();
 
-	void Init();
-	void Update();
+	void Update(int interval);
 
 	static constexpr const uint32_t NUM_PARTICLES = 5000;
 	static constexpr const float RGBA_MIN = 0.0;

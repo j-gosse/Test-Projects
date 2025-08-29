@@ -186,7 +186,7 @@ void Window::LogLastError(const wchar_t* desc) {
 	if (eMsg)
 	{
 		std::wcout << desc << L" failed with error code " << eCode << L": " << eMsg << std::endl;
-		LocalFree(eMsg); // Free the buffer allocated by FormatMessage
+		LocalFree(eMsg); // Free buffer allocated by FormatMessage
 	}
 	else
 	{

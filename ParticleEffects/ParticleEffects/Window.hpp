@@ -95,7 +95,7 @@ public:
 
 	/**
 	* @brief	Return the window handle.
-	* @return	m_hWindow
+	* @return	HWND m_hWindow
 	*/
 	HWND GetWindow() const { return m_hWindow; }
 };
