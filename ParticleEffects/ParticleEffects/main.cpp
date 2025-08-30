@@ -1,5 +1,5 @@
 /*! \file       ParticleEffects
-    \version    1.4
+    \version    1.5
     \desc	    Windows application for testing various particle rendering effects.
     \author     Jacob Gosse
     \date       August 28, 2025

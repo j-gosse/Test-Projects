@@ -32,6 +32,16 @@ void Swarm::Init(const HWND& hWnd)
 
 	Swarm::ResizeBuffer(windowWidth, windowHeight);
 	std::wcout << L"Buffer initialized." << '\n';
+
+	for (int i = 0; i < NUM_PARTICLES; i++)
+	{
+		float angle = static_cast<float>((std::rand() % 360) * std::numbers::pi / 180.0f);
+		float radius = (std::rand() % 50) + i * 0.5f; // staggered radius
+		float angularSpeed = 0.02f + static_cast<float>(std::rand() % 100) / 5000.0f;
+		float radialSpeed = 0.05f;
+
+		m_particles[i].Init(angle, radius, angularSpeed, radialSpeed, windowWidth, windowHeight);
+	}
 }
 
 void Swarm::Update(const HWND& hWnd, ULONGLONG elapsedTime)
@@ -57,10 +67,10 @@ void Swarm::Update(const HWND& hWnd, ULONGLONG elapsedTime)
 
 	for (int i = 0; i < NUM_PARTICLES; i++)
 	{
-		m_particles[i].Update(interval);
+		m_particles[i].Update(interval, elapsedTime, i, windowWidth, windowHeight);
 
-		int x = static_cast<int>((m_particles[i].GetX() + 1) * (windowWidth / 2.0f));
-		int y = static_cast<int>((m_particles[i].GetY() + 1) * (windowHeight / 2.0f));
+		//int x = static_cast<int>((m_particles[i].GetX() + 1) * (windowWidth / 2.0f));
+		//int y = static_cast<int>((m_particles[i].GetY() + 1) * (windowHeight / 2.0f));
 
 		//int x = static_cast<int>((m_particles[i].GetX() + 1) * windowWidth / 2.0f);
 		//int y = static_cast<int>(m_particles[i].GetY() * (windowWidth / 2.0f) + (windowHeight / 2.0f));
@@ -68,6 +78,9 @@ void Swarm::Update(const HWND& hWnd, ULONGLONG elapsedTime)
 		//float scale = min(windowWidth, windowHeight) / 2.0f;
 		//int x = static_cast<int>(m_particles[i].GetX() * scale + windowWidth / 2.0f);
 		//int y = static_cast<int>(m_particles[i].GetY() * scale + windowHeight / 2.0f);
+
+		int x = static_cast<int>((m_particles[i].GetX() + 1) + m_particles[i].GetRadius() * std::cos(m_particles[i].GetAngle()));
+		int y = static_cast<int>((m_particles[i].GetY() + 1) + m_particles[i].GetRadius() * std::sin(m_particles[i].GetAngle()));
 
 		Swarm::DrawPixel(x, y, windowWidth, windowHeight, color);
 	}
@@ -119,17 +132,17 @@ void Swarm::PaintBuffer(const HWND& hWnd)
 	ReleaseDC(hWnd, hdc);
 }
 
-void Swarm::DrawPixel(int x, int y, int width, int height, uint32_t color)
+void Swarm::DrawPixel(int x, int y, int windowWidth, int windowHeight, uint32_t color)
 {
 	// check to ensure pixels are not drawn outside of the window
-	if (x < 0 || x >= width || y < 0 || y >= height) return;
+	if (x < 0 || x >= windowWidth || y < 0 || y >= windowHeight) return;
 
-	m_buffer[(static_cast<std::vector<uint32_t, std::allocator<uint32_t>>::size_type>(y) * width) + x] = color;
+	m_buffer[(static_cast<std::vector<uint32_t, std::allocator<uint32_t>>::size_type>(y) * windowWidth) + x] = color;
 }
 
-void Swarm::ResizeBuffer(int width, int height)
+void Swarm::ResizeBuffer(int windowWidth, int windowHeight)
 {
-	m_buffer.resize(static_cast<unsigned long long>(width) * height * 4);
+	m_buffer.resize(static_cast<unsigned long long>(windowWidth) * windowHeight * 4);
 }
 
 void Swarm::ClearBuffer()

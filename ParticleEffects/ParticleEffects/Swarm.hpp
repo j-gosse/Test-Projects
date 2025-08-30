@@ -5,7 +5,6 @@
 
 #include "Particle.hpp"
 
-#include <windows.h>
 #include <vector>
 
 class Swarm : public Particle
@@ -24,8 +23,8 @@ public:
 	void Render(const HWND& hWnd);
 
 	void PaintBuffer(const HWND& hWnd);
-	void DrawPixel(int x, int y, int width, int height, uint32_t color);
-	void ResizeBuffer(int width, int height);
+	void DrawPixel(int x, int y, int windowWidth, int windowHeight, uint32_t color);
+	void ResizeBuffer(int windowWidth, int windowHeight);
 	void ClearBuffer();
 	void Cleanup();
 };

@@ -21,7 +21,7 @@ Window::~Window()
 
 void Window::Init()
 {
-	std::wcout << L"Window initialization." << std::endl;
+	std::wcout << L"Window creation:" << std::endl;
 
 	// create window class
 	m_windowClass.cbSize = sizeof(WNDCLASSEX);
