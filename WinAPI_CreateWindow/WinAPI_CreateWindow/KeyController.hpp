@@ -19,6 +19,27 @@ public:
     void OnKeyDown(WPARAM key) override
     {
         std::wcout << L"Key Down: " << key << "\n";
+
+        switch (key)
+        {
+        case 'W':
+            std::cout << "Pressed W\n";
+            break;
+        case 'A':
+            std::cout << "Pressed A\n";
+            break;
+        case 'S':
+            std::cout << "Pressed S\n";
+            break;
+        case 'D':
+            std::cout << "Pressed D\n";
+            break;
+        case VK_SPACE:
+            std::cout << "Pressed Spacebar\n";
+            break;
+        default:
+            break;
+        }
     }
 
     void OnKeyUp(WPARAM key) override
