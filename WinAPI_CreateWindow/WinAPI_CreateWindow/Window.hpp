@@ -7,8 +7,8 @@
 
 #include "framework.h"
 #include "resource.h"
+#include "KeyHandler.hpp"
 
-#include <windows.h>
 #include <stdexcept>
 #include <iostream>
 
@@ -26,6 +26,8 @@ private:
 
 	static constexpr const uint32_t WINDOW_WIDTH = 800;
 	static constexpr const uint32_t WINDOW_HEIGHT = 600;
+
+	KeyHandler m_keyHandler;
 
 	/**
 	* @brief	Function to deliver specific messages to a window.
@@ -125,6 +127,8 @@ public:
 	* @return	HWND m_hWindow
 	*/
 	HWND GetWindow() const { return m_hWindow; }
+
+	KeyHandler& GetKeyHandler() { return m_keyHandler; }
 };
 
 #endif

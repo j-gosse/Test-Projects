@@ -1,5 +1,5 @@
 /*! \file       WinAPI_CreateWindow
-    \version    1.1
+    \version    1.2
     \desc	    Windows application for testing the creation of a window through use of the Windows API.
     \author     Jacob Gosse
     \date       September 1, 2025
@@ -23,6 +23,7 @@
 */
 
 #include "Window.hpp"
+#include "KeyController.hpp"
 #include <cstdio>
 #include <conio.h>
 
@@ -56,6 +57,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
         std::unique_ptr<Window, std::default_delete<Window>> window = std::make_unique<Window>(hInstance);
         window->InitWindow();
+
+        KeyController controller;
+        window->GetKeyHandler().AddListener(&controller);
 
         while (window->ProcessMessages())
         {

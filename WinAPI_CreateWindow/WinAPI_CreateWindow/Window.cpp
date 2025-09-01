@@ -114,6 +114,15 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
+	case WM_KEYDOWN:
+		m_keyHandler.DispatchKeyDown(wParam);
+		return 0;
+	case WM_KEYUP:
+		m_keyHandler.DispatchKeyUp(wParam);
+		return 0;
+	case WM_CHAR:
+		m_keyHandler.DispatchChar(wParam);
+		return 0;
 	case WM_SIZE:
 		std::wcout << L"CASE: WM_SIZE" << '\n';
 		std::wcout << LOWORD(lParam) << L'x' << HIWORD(lParam) << '\n';
