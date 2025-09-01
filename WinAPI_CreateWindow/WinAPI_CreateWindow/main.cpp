@@ -1,5 +1,5 @@
 /*! \file       WinAPI_CreateWindow
-    \version    1.3
+    \version    1.4
     \desc	    Windows application for testing the creation of a window through use of the Windows API.
     \author     Jacob Gosse
     \date       September 1, 2025
@@ -58,8 +58,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
         std::unique_ptr<Window, std::default_delete<Window>> window = std::make_unique<Window>(hInstance);
         window->InitWindow();
 
-        KeyController controller;
-        window->GetKeyHandler().AddListener(&controller);
+        std::unique_ptr<KeyController, std::default_delete<KeyController>> controller = std::make_unique<KeyController>();
+        window->GetKeyHandler().AddListener(controller.get());
 
         while (window->ProcessMessages())
         {
@@ -75,6 +75,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
             Sleep(16);  // simulate ~60 FPS
         }
+
+        controller.reset();
+        controller = nullptr;
 
         window.reset();
         window = nullptr;

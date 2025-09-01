@@ -8,12 +8,13 @@
 #define IKEYLISTENER_HPP_
 
 #include "windows.h"
+#include <iostream>
 
 class IKeyListener
 {
 public:
-    IKeyListener() {}
-    virtual ~IKeyListener() = default;
+    IKeyListener() { std::wcout << L"CONSTRUCTOR: IKeyListener()" << '\n'; }
+    virtual ~IKeyListener() { std::wcout << L"DESTRUCTOR: ~IKeyListener()" << '\n'; }
 
     virtual void OnKeyDown(WPARAM key) = 0;
     virtual void OnKeyUp(WPARAM key) = 0;

@@ -18,8 +18,13 @@ private:
     std::vector<IKeyListener*> m_listeners;
 
 public:
-    KeyHandler() {}
-    virtual ~KeyHandler() {}
+    KeyHandler() { std::wcout << L"CONSTRUCTOR: KeyHandler()" << '\n'; }
+    virtual ~KeyHandler()
+    {
+        std::wcout << L"DESTRUCTOR: ~KeyHandler()" << '\n';
+
+        m_listeners.clear();
+    }
 
     void AddListener(IKeyListener* listener)
     {

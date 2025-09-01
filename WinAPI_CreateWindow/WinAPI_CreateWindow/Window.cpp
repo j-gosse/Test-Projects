@@ -9,7 +9,8 @@ Window::Window(HINSTANCE hInstance) :
 	m_hAccelTable(nullptr),
 	m_startupInfo({}),
 	m_szTitle(L""),
-	m_szWindowClass(L"")
+	m_szWindowClass(L""),
+	m_keyHandler(std::make_unique<KeyHandler>())
 {
 	std::wcout << L"CONSTRUCTOR: Window()" << '\n';
 	m_startupInfo.cb = sizeof(m_startupInfo);
@@ -101,6 +102,9 @@ BOOL Window::ProcessMessages() const
 
 void Window::Cleanup()
 {
+	m_keyHandler.reset();
+	m_keyHandler = nullptr;
+
 	DestroyWindow(m_hWindow);
 	m_hWindow = nullptr;
 
@@ -115,13 +119,13 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_KEYDOWN:
-		m_keyHandler.DispatchKeyDown(wParam);
+		m_keyHandler->DispatchKeyDown(wParam);
 		return 0;
 	case WM_KEYUP:
-		m_keyHandler.DispatchKeyUp(wParam);
+		m_keyHandler->DispatchKeyUp(wParam);
 		return 0;
 	case WM_CHAR:
-		m_keyHandler.DispatchChar(wParam);
+		m_keyHandler->DispatchChar(wParam);
 		return 0;
 	case WM_SIZE:
 		std::wcout << L"CASE: WM_SIZE" << '\n';

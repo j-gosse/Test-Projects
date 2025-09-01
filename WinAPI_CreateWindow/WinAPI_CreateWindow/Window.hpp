@@ -27,7 +27,7 @@ private:
 	static constexpr const uint32_t WINDOW_WIDTH = 800;
 	static constexpr const uint32_t WINDOW_HEIGHT = 600;
 
-	KeyHandler m_keyHandler;
+	std::unique_ptr<KeyHandler> m_keyHandler;
 
 	/**
 	* @brief	Function to deliver specific messages to a window.
@@ -128,7 +128,11 @@ public:
 	*/
 	HWND GetWindow() const { return m_hWindow; }
 
-	KeyHandler& GetKeyHandler() { return m_keyHandler; }
+	/**
+	* @brief	Return the key handler.
+	* @return	KeyHandler m_keyHandler
+	*/
+	KeyHandler& GetKeyHandler() { return *m_keyHandler; }
 };
 
 #endif

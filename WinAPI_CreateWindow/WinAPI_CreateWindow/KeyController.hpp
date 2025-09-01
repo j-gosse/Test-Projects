@@ -8,13 +8,12 @@
 #define KEYCONTROLLER_HPP_
 
 #include "IKeyListener.hpp"
-#include <iostream>
 
 class KeyController : public IKeyListener
 {
 public:
-    KeyController() {}
-    virtual ~KeyController() {}
+    KeyController() { std::wcout << L"CONSTRUCTOR: KeyController()" << '\n'; }
+    virtual ~KeyController() { std::wcout << L"DESTRUCTOR: ~KeyController()" << '\n'; }
 
     void OnKeyDown(WPARAM key) override
     {
