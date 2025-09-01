@@ -47,25 +47,4 @@ public:
     }
 };
 
-//class KeyHandler : public IKeyListener
-//{
-//private:
-//
-//public:
-//    void OnKeyDown(WPARAM key) override
-//    {
-//        std::cout << "Key Down: " << key << "\n";
-//    }
-//
-//    void OnKeyUp(WPARAM key) override
-//    {
-//        std::cout << "Key Up: " << key << "\n";
-//    }
-//
-//    void OnChar(WPARAM ch) override
-//    {
-//        std::cout << "Char: " << static_cast<char>(ch) << "\n";
-//    }
-//};
-
 #endif

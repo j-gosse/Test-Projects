@@ -1,6 +1,6 @@
-// IKeyListener.hpp : The functions in this class are overridden by the classes it is included with
-// (other than KeyHandler) which allows for decoupling the process of listening for key presses
-// from the Window class
+// IKeyListener.hpp : The functions in this class are overridden by the classes it is included with (other than KeyHandler) 
+// which allows for decoupling the process of listening for key presses from the Window class
+//
 
 #pragma once
 
