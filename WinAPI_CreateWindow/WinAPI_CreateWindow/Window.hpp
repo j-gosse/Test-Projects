@@ -32,6 +32,7 @@ private:
 	* @param	UINT uMsg : uMsg is the message code; for example, the WM_SIZE message indicates the window was resized.
 	* @param	WPARAM wParam : Provides additional message-specific information. Indicates whether the window was minimized, maximized, or resized.
 	* @param	LPARAM lParam : Provides additional message-specific information. Contains the new width and height of the window.
+	* @return	DefWindowProcW(m_hWindow, uMsg, wParam, lParam) when default switch case or return 0 when switch case
 	*/
 	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -41,11 +42,13 @@ private:
 	* @param	UINT uMsg : The message identifier. This parameter specifies which message is being sent to the window (e.g. WM_CREATE, WM_PAINT, WM_COMMAND).
 	* @param	WPARAM wParam : Provides additional message-specific information. Indicates whether the window was minimized, maximized, or resized.
 	* @param	LPARAM lParam : Provides additional message-specific information. Contains the new width and height of the window.
+	* @return	DefWindowProcW(hWnd, uMsg, wParam, lParam)
 	*/
 	static LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	/**
 	* @brief	Register the window class.
+	* @return	RegisterClassExW(&m_windowClass)
 	*/
 	ATOM RegisterWindowClass();
 
@@ -55,6 +58,7 @@ private:
 	* @param	UINT uMsg : The message identifier. This parameter specifies which message is being sent to the window (e.g. WM_CREATE, WM_PAINT, WM_COMMAND).
 	* @param	WPARAM wParam : Provides additional message-specific information.
 	* @param	LPARAM lParam : Provides additional message-specific information.
+	* @return	(INT_PTR)TRUE when switch case or (INT_PTR)FALSE when no switch case
 	*/
 	static INT_PTR CALLBACK About(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -95,12 +99,13 @@ public:
 	virtual ~Window();
 
 	/**
-	* @brief	Customize window properties and create window.
+	* @brief	Customize window properties and create the window.
 	*/
 	void InitWindow();
 
 	/**
 	* @brief	Process queued messages sent to the window.
+	* @return	(int)msg.wParam
 	*/
 	BOOL ProcessMessages() const;
 

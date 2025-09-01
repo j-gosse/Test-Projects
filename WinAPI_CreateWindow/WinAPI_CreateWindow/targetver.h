@@ -4,8 +4,8 @@
 
 #pragma once
 
-#ifndef TARGETVER_HPP_
-#define TARGETVER_HPP_
+#ifndef TARGETVER_H_
+#define TARGETVER_H_
 
 #include <SDKDDKVer.h>
 

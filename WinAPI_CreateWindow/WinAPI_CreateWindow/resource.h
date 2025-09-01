@@ -4,8 +4,8 @@
 
 #pragma once
 
-#ifndef RESOURCE_HPP_
-#define RESOURCE_HPP_
+#ifndef RESOURCE_H_
+#define RESOURCE_H_
 
 #define IDS_WINDOW_TITLE		103
 

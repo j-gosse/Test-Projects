@@ -2,8 +2,8 @@
 
 #pragma once
 
-#ifndef FRAMEWORK_HPP_
-#define FRAMEWORK_HPP_
+#ifndef FRAMEWORK_H_
+#define FRAMEWORK_H_
 
 #include "targetver.h"
 
