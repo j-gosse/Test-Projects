@@ -88,6 +88,25 @@ BOOL Window::ProcessMessages() const
 {
 	MSG msg = {};
 
+	while (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE))
+	{
+		if (msg.message == WM_QUIT) return FALSE;
+
+		if (!TranslateAccelerator(msg.hwnd, m_hAccelTable, &msg))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+	}
+
+	return TRUE;
+}
+
+/*
+BOOL Window::ProcessMessages() const
+{
+	MSG msg = {};
+
 	while (GetMessage(&msg, nullptr, 0, 0))
 	{
 		if (!TranslateAccelerator(msg.hwnd, m_hAccelTable, &msg))
@@ -99,11 +118,15 @@ BOOL Window::ProcessMessages() const
 
 	return (int)msg.wParam;
 }
+*/
 
 void Window::Cleanup()
 {
 	m_keyHandler.reset();
 	m_keyHandler = nullptr;
+
+	DestroyAcceleratorTable(m_hAccelTable);
+	m_hAccelTable = nullptr;
 
 	DestroyWindow(m_hWindow);
 	m_hWindow = nullptr;

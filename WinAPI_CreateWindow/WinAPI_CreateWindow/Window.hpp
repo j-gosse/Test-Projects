@@ -30,8 +30,8 @@ private:
 	std::unique_ptr<KeyHandler> m_keyHandler;
 
 	/**
-	* @brief	Function to deliver specific messages to a window.
-	* @param	UINT uMsg : uMsg is the message code; for example, the WM_SIZE message indicates the window was resized.
+	* @brief	Handle messages sent to the window on a switch-case basis.
+	* @param	UINT uMsg : The message identifier. This parameter specifies which message is being sent to the window (e.g. WM_CREATE, WM_PAINT, WM_COMMAND).
 	* @param	WPARAM wParam : Provides additional message-specific information. Indicates whether the window was minimized, maximized, or resized.
 	* @param	LPARAM lParam : Provides additional message-specific information. Contains the new width and height of the window.
 	* @return	DefWindowProcW(m_hWindow, uMsg, wParam, lParam) when default switch case or return 0 when switch case
@@ -39,8 +39,8 @@ private:
 	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	/**
-	* @brief	Callback function to process messages sent to a window.
-	* @param	HWND hWnd : A handle to the window that is receiving the message.
+	* @brief	Callback function to process event messages sent to the window.
+	* @param	HWND hWnd : A handle to the window that is receiving messages.
 	* @param	UINT uMsg : The message identifier. This parameter specifies which message is being sent to the window (e.g. WM_CREATE, WM_PAINT, WM_COMMAND).
 	* @param	WPARAM wParam : Provides additional message-specific information. Indicates whether the window was minimized, maximized, or resized.
 	* @param	LPARAM lParam : Provides additional message-specific information. Contains the new width and height of the window.
@@ -49,7 +49,7 @@ private:
 	static LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	/**
-	* @brief	Register the window class.
+	* @brief	Registers the main window class.
 	* @return	RegisterClassExW(&m_windowClass)
 	*/
 	ATOM RegisterWindowClass();
