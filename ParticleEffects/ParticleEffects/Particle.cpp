@@ -76,7 +76,7 @@ void Particle::Update(int interval, ULONGLONG elapsedTime, int steps, int width,
 	float pulse = std::sin(elapsed * 1.5f + steps * 0.1f);
 	float baseRadius = m_minRadius + (m_maxRadius - m_minRadius) * 0.5f * (pulse + 1);
 	float spiralScale = m_minScale + (m_maxScale - m_minScale) * 0.5f * (std::sin(elapsed * 0.8f) + 1);
-	m_radius = baseRadius * spiralScale;
+	m_radius = (baseRadius * spiralScale);
 
 	//m_x += m_xSpeed * interval;
 	//m_y += m_ySpeed * interval;

@@ -162,3 +162,39 @@ void Swarm::Cleanup()
 	m_particles = nullptr;
 	std::wcout << L"Particles deleted." << '\n';
 }
+
+void Swarm::OnKeyDown(WPARAM key)
+{
+	std::wcout << L"Key Down: " << key << "\n";
+
+	switch (key)
+	{
+	case 'W':
+		std::wcout << L"Pressed W\n";
+		break;
+	case 'A':
+		std::wcout << L"Pressed A\n";
+		break;
+	case 'S':
+		std::wcout << L"Pressed S\n";
+		break;
+	case 'D':
+		std::wcout << L"Pressed D\n";
+		break;
+	case VK_SPACE:
+		std::wcout << L"Pressed Spacebar\n";
+		break;
+	default:
+		break;
+	}
+}
+
+void Swarm::OnKeyUp(WPARAM key)
+{
+	std::wcout << L"Key Up: " << key << "\n";
+}
+
+void Swarm::OnChar(WPARAM ch)
+{
+	std::wcout << L"Char: " << (char)ch << "\n";
+}

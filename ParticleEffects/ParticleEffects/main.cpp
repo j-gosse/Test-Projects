@@ -1,5 +1,5 @@
 /*! \file       ParticleEffects
-    \version    1.5
+    \version    1.6
     \desc	    Windows application for testing various particle rendering effects.
     \author     Jacob Gosse
     \date       August 28, 2025
@@ -145,37 +145,47 @@
        m_windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);	// black background
 */
 
-// TODO: use custom deleter?
-/*
-struct MyDeleter
-{
-    void operator()(Window* ptr) const
-    {
-        std::cout << "Destroying app pointer." << std::endl;
-        delete ptr;
-        ptr = nullptr;
-    }
-};
-std::unique_ptr<Window, MyDeleter> ptr;
-//std::unique_ptr<Window, MyDeleter> window(new Window(), MyDeleter{});
-*/
-
 #include "Window.hpp"
 #include "Swarm.hpp"
 
-int main()
+#include <cstdio>
+#include <conio.h>
+
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
     try
     {
+        if (AllocConsole())
+        {
+            // Console successfully allocated
+        }
+        else
+        {
+            // Error allocating console
+        }
+
+        FILE* pCout = nullptr;
+        FILE* pCin = nullptr;
+        FILE* pCerr = nullptr;
+
+        // Redirect stdout
+        freopen_s(&pCout, "CONOUT$", "w", stdout);
+        // Redirect stdin
+        freopen_s(&pCin, "CONIN$", "r", stdin);
+        // Redirect stderr
+        freopen_s(&pCerr, "CONOUT$", "w", stderr);
+
         ULONGLONG startTime = GetTickCount64();
         ULONGLONG currentTime;
         ULONGLONG elapsedTime;
 
-        std::unique_ptr<Window, std::default_delete<Window>> window = std::make_unique<Window>();
-        window->Init();
+        std::unique_ptr<Window, std::default_delete<Window>> window = std::make_unique<Window>(hInstance);
+        window->InitWindow();
 
         std::unique_ptr<Swarm, std::default_delete<Swarm>> swarm = std::make_unique<Swarm>();
         swarm->Init(window->GetWindow());
+
+        window->GetKeyHandler().AddListener(swarm.get());
 
         while (window->ProcessMessages())
         {
@@ -202,6 +212,9 @@ int main()
         window = nullptr;
 
         std::wcout << L"Application exited successfully." << std::endl;
+
+        std::cout << "Program finished. Press any key to continue..." << std::endl;
+        _getch(); // Waits for a single character input
 
         return 0;
     }

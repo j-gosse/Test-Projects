@@ -4,10 +4,11 @@
 #define SWARM_HPP_
 
 #include "Particle.hpp"
+#include "IKeyListener.hpp"
 
 #include <vector>
 
-class Swarm : public Particle
+class Swarm : public Particle, public IKeyListener
 {
 private:
 	Particle* m_particles;
@@ -27,6 +28,10 @@ public:
 	void ResizeBuffer(int windowWidth, int windowHeight);
 	void ClearBuffer();
 	void Cleanup();
+
+	void OnKeyDown(WPARAM key) override;
+	void OnKeyUp(WPARAM key) override;
+	void OnChar(WPARAM ch) override;
 };
 
 #endif
