@@ -20,6 +20,8 @@ private:
 	HINSTANCE m_hInstance;
 	HACCEL m_hAccelTable;
 	STARTUPINFO m_startupInfo;
+	PROCESS_INFORMATION m_processInfo;
+	SYSTEM_INFO m_systemInfo;
 
 	WCHAR m_szTitle[MAX_LOADSTRING];		// title bar text
 	WCHAR m_szWindowClass[MAX_LOADSTRING];	// main window class name

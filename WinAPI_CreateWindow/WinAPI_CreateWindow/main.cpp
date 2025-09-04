@@ -1,5 +1,5 @@
 /*! \file       WinAPI_CreateWindow
-    \version    1.5
+    \version    1.6
     \desc	    Windows application for testing the creation of a window through use of the Windows API.
     \author     Jacob Gosse
     \date       September 1, 2025

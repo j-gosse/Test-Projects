@@ -1,4 +1,5 @@
 #include "Window.hpp"
+#include <lmcons.h>	// UNLEN and MAX_COMPUTERNAME_LENGTH
 
 /* CONSTRUCTOR */
 
@@ -8,13 +9,52 @@ Window::Window(HINSTANCE hInstance) :
 	m_hInstance(hInstance),
 	m_hAccelTable(nullptr),
 	m_startupInfo({}),
+	m_processInfo({}),
+	m_systemInfo({}),
 	m_szTitle(L""),
 	m_szWindowClass(L""),
 	m_keyHandler(std::make_unique<KeyHandler>())
 {
 	std::wcout << L"CONSTRUCTOR: Window()" << '\n';
+
+	ZeroMemory(&m_startupInfo, sizeof(m_startupInfo));
 	m_startupInfo.cb = sizeof(m_startupInfo);
-	GetStartupInfoW(&m_startupInfo);
+	ZeroMemory(&m_processInfo, sizeof(m_processInfo));
+
+	m_startupInfo.dwFlags = STARTF_USESHOWWINDOW;
+	m_startupInfo.wShowWindow = SW_SHOW;
+
+	GetNativeSystemInfo(&m_systemInfo);
+
+	std::wcout << L"\nUser Information:\n";
+	WCHAR buffer1[UNLEN + 1]{};
+	DWORD size1 = UNLEN + 1;
+	GetUserNameW(buffer1, &size1);
+	std::wcout << L"Username: " << buffer1 << '\n';
+
+	WCHAR buffer2[MAX_COMPUTERNAME_LENGTH + 1]{};
+	DWORD size2 = MAX_COMPUTERNAME_LENGTH + 1;
+	GetComputerNameW(buffer2, &size2);
+	std::wcout << L"Computer Name: " << buffer2 << '\n';
+
+	std::wcout << L"Processor Information:\n";
+	std::wcout << L"Architecture: ";
+	switch (m_systemInfo.wProcessorArchitecture)
+	{
+	case PROCESSOR_ARCHITECTURE_AMD64:
+		std::wcout << L"x64 (AMD/Intel)";
+		break;
+	case PROCESSOR_ARCHITECTURE_INTEL:
+		std::wcout << L"x86";
+		break;
+	case PROCESSOR_ARCHITECTURE_ARM64:
+		std::wcout << L"ARM64";
+		break;
+	default:
+		std::wcout << L"Unknown";
+		break;
+	}
+	std::wcout << L"\nLogical Processors (threads): " << m_systemInfo.dwNumberOfProcessors << L"\n\n";
 }
 
 /* DESTRUCTOR */
