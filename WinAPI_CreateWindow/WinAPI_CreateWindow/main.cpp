@@ -1,5 +1,5 @@
 /*! \file       WinAPI_CreateWindow
-    \version    1.6
+    \version    1.7
     \desc	    Windows application for testing the creation of a window through use of the Windows API.
     \author     Jacob Gosse
     \date       September 1, 2025
@@ -11,7 +11,7 @@
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+   You may obtain a copy of the License at:
 
        http://www.apache.org/licenses/LICENSE-2.0
 
@@ -34,22 +34,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
         if (AllocConsole())
         {
             // Console successfully allocated
+            std::wcout << L"Console successfully allocated." << L'\n';
         }
         else
         {
             // Error allocating console
+            throw std::runtime_error("Error allocating console!");
         }
 
         FILE* pCout = nullptr;
         FILE* pCin = nullptr;
         FILE* pCerr = nullptr;
-
-        // Redirect stdout
-        freopen_s(&pCout, "CONOUT$", "w", stdout);
-        // Redirect stdin
-        freopen_s(&pCin, "CONIN$", "r", stdin);
-        // Redirect stderr
-        freopen_s(&pCerr, "CONOUT$", "w", stderr);
+        freopen_s(&pCout, "CONOUT$", "w", stdout);  // Redirect stdout
+        freopen_s(&pCin, "CONIN$", "r", stdin);     // Redirect stdin
+        freopen_s(&pCerr, "CONOUT$", "w", stderr);  // Redirect stderr
 
         ULONGLONG startTime = GetTickCount64();
         ULONGLONG currentTime;

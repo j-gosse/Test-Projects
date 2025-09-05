@@ -1,4 +1,5 @@
 #include "Window.hpp"
+
 #include <lmcons.h>	// UNLEN and MAX_COMPUTERNAME_LENGTH
 
 /* CONSTRUCTOR */
@@ -15,7 +16,7 @@ Window::Window(HINSTANCE hInstance) :
 	m_szWindowClass(L""),
 	m_keyHandler(std::make_unique<KeyHandler>())
 {
-	std::wcout << L"CONSTRUCTOR: Window()" << '\n';
+	std::wcout << L"CONSTRUCTOR: Window(HINSTANCE hInstance)" << L'\n';
 
 	ZeroMemory(&m_startupInfo, sizeof(m_startupInfo));
 	m_startupInfo.cb = sizeof(m_startupInfo);
@@ -23,67 +24,38 @@ Window::Window(HINSTANCE hInstance) :
 
 	m_startupInfo.dwFlags = STARTF_USESHOWWINDOW;
 	m_startupInfo.wShowWindow = SW_SHOW;
-
-	GetNativeSystemInfo(&m_systemInfo);
-
-	std::wcout << L"\nUser Information:\n";
-	WCHAR buffer1[UNLEN + 1]{};
-	DWORD size1 = UNLEN + 1;
-	GetUserNameW(buffer1, &size1);
-	std::wcout << L"Username: " << buffer1 << '\n';
-
-	WCHAR buffer2[MAX_COMPUTERNAME_LENGTH + 1]{};
-	DWORD size2 = MAX_COMPUTERNAME_LENGTH + 1;
-	GetComputerNameW(buffer2, &size2);
-	std::wcout << L"Computer Name: " << buffer2 << '\n';
-
-	std::wcout << L"Processor Information:\n";
-	std::wcout << L"Architecture: ";
-	switch (m_systemInfo.wProcessorArchitecture)
-	{
-	case PROCESSOR_ARCHITECTURE_AMD64:
-		std::wcout << L"x64 (AMD/Intel)";
-		break;
-	case PROCESSOR_ARCHITECTURE_INTEL:
-		std::wcout << L"x86";
-		break;
-	case PROCESSOR_ARCHITECTURE_ARM64:
-		std::wcout << L"ARM64";
-		break;
-	default:
-		std::wcout << L"Unknown";
-		break;
-	}
-	std::wcout << L"\nLogical Processors (threads): " << m_systemInfo.dwNumberOfProcessors << L"\n\n";
 }
 
 /* DESTRUCTOR */
 
 Window::~Window()
 {
-	std::wcout << L"DESTRUCTOR: ~Window()" << '\n';
+	std::wcout << L"DESTRUCTOR: ~Window()" << L'\n';
 }
 
 /* FUNCTION DEFINITIONS */
 
 void Window::InitWindow()
 {
+	Window::GetSysInfo();
+	Window::GetProcessorInfo();
+
 	LoadStringW(m_hInstance, IDS_WINDOW_TITLE, m_szTitle, MAX_LOADSTRING);
 	LoadStringW(m_hInstance, IDC_WINDOW_CLASS, m_szWindowClass, MAX_LOADSTRING);
-
-	RegisterWindowClass();
+	Window::RegisterWindowClass();
 
 	// nCmdShow controls how the window is to be shown
 	// Paremeter is ignored the first time an application calls show window if STARTUPINFO structure specified
 	int nCmdShow = (m_startupInfo.dwFlags & STARTF_USESHOWWINDOW) ? m_startupInfo.wShowWindow : SW_SHOWDEFAULT;
 
+	DWORD dwExStyle = 0;
 	RECT rect = { 0, 0, Window::WINDOW_WIDTH, Window::WINDOW_HEIGHT };
-	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
+	AdjustWindowRectEx(&rect, WS_OVERLAPPEDWINDOW, TRUE, dwExStyle);
 	int windowWidth = rect.right - rect.left;
 	int windowHeight = rect.bottom - rect.top;
 
 	m_hWindow = CreateWindowExW(//HWND CreateWindowExW(
-		0,						//[in]			 DWORD	   dwExStyle,
+		dwExStyle,				//[in]			 DWORD	   dwExStyle,
 		Window::m_szWindowClass,//[in, optional] LPCSTR    lpClassName,
 		Window::m_szTitle,		//[in, optional] LPCSTR    lpWindowName,
 		WS_OVERLAPPEDWINDOW,	//[in]           DWORD     dwStyle,
@@ -102,15 +74,13 @@ void Window::InitWindow()
 		throw std::runtime_error("Failed to create the window!");
 	}
 
-	// set window position relative to screen resolution
-	int screenWidth = GetSystemMetrics(SM_CXSCREEN);
-	int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-	int centerWidth = (screenWidth - windowWidth) / 2;
-	int centerHeight = (screenHeight - windowHeight) / 2;
+	// set window position centered relative to screen resolution
+	int centerWidth = (m_screenWidth - windowWidth) / 2;
+	int centerHeight = (m_screenHeight - windowHeight) / 2;
 
 	SetWindowPos(				//BOOL SetWindowPos(
 		m_hWindow,				//[in]           HWND hWnd,
-		HWND_TOPMOST,			//[in, optional] HWND hWndInsertAfter,
+		HWND_TOP,				//[in, optional] HWND hWndInsertAfter,
 		centerWidth,			//[in]           int  X,	 // The new position of the left side of the window, in client coordinates
 		centerHeight,			//[in]           int  Y,	 // The new position of the top of the window, in client coordinates
 		windowWidth,			//[in]           int  cx,	 // The new width of the window, in pixels
@@ -127,8 +97,10 @@ void Window::InitWindow()
 BOOL Window::ProcessMessages() const
 {
 	MSG msg = {};
+	UINT msgFilterMin = 0;
+	UINT msgFilterMax = 0;
 
-	while (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE))
+	while (PeekMessageW(&msg, m_hWindow, msgFilterMin, msgFilterMax, PM_REMOVE))
 	{
 		if (msg.message == WM_QUIT) return FALSE;
 
@@ -146,8 +118,10 @@ BOOL Window::ProcessMessages() const
 BOOL Window::ProcessMessages() const
 {
 	MSG msg = {};
+	UINT msgFilterMin = 0;
+	UINT msgFilterMax = 0;
 
-	while (GetMessage(&msg, nullptr, 0, 0))
+	while (GetMessage(&msg, m_hWindow, msgFilterMin, msgFilterMax))
 	{
 		if (!TranslateAccelerator(msg.hwnd, m_hAccelTable, &msg))
 		{
@@ -271,6 +245,132 @@ ATOM Window::RegisterWindowClass()
 	}
 
 	return RegisterClassExW(&m_windowClass);
+}
+
+void Window::GetSysInfo()
+{
+	WCHAR buffer1[UNLEN + 1]{};
+	DWORD size1 = UNLEN + 1;
+	GetUserNameW(buffer1, &size1);
+	std::wcout << L"\nUsername: " << buffer1 << L'\n';
+
+	WCHAR buffer2[MAX_COMPUTERNAME_LENGTH + 1]{};
+	DWORD size2 = MAX_COMPUTERNAME_LENGTH + 1;
+	GetComputerNameW(buffer2, &size2);
+	std::wcout << L"Computer Name: " << buffer2 << L'\n';
+
+	/*
+	typedef struct _SYSTEM_INFO {
+	  union {
+		DWORD dwOemId;
+		struct {
+		  WORD wProcessorArchitecture;
+		  WORD wReserved;
+		} DUMMYSTRUCTNAME;
+	  } DUMMYUNIONNAME;
+	  DWORD     dwPageSize;
+	  LPVOID    lpMinimumApplicationAddress;
+	  LPVOID    lpMaximumApplicationAddress;
+	  DWORD_PTR dwActiveProcessorMask;
+	  DWORD     dwNumberOfProcessors;
+	  DWORD     dwProcessorType;
+	  DWORD     dwAllocationGranularity;
+	  WORD      wProcessorLevel;
+	  WORD      wProcessorRevision;
+	} SYSTEM_INFO, *LPSYSTEM_INFO;
+
+	Use the wProcessorArchitecture, wProcessorLevel, and wProcessorRevision members to determine the type of processor.
+	*/
+	GetNativeSystemInfo(&m_systemInfo);
+
+	std::wcout << L"Processor Architecture: ";
+	switch (m_systemInfo.wProcessorArchitecture)
+	{
+	case PROCESSOR_ARCHITECTURE_INTEL:
+		std::wcout << L"x86\n";
+		break;
+	case PROCESSOR_ARCHITECTURE_AMD64:
+		std::wcout << L"x64 (AMD or Intel)\n";
+		break;
+	case PROCESSOR_ARCHITECTURE_ARM:
+		std::wcout << L"ARM\n";
+		break;
+	case PROCESSOR_ARCHITECTURE_ARM64:
+		std::wcout << L"ARM64\n";
+		break;
+	case PROCESSOR_ARCHITECTURE_IA64:
+		std::wcout << L"Intel Itanium-based\n";
+		break;
+	default:
+		std::wcout << L"Unknown architecture\n";
+		break;
+	}
+	std::wcout << L"Processor Level: " << m_systemInfo.wProcessorLevel << L'\n';
+	std::wcout << L"Processor Revision: " << m_systemInfo.wProcessorRevision << L'\n';
+	std::wcout << L"Logical Processors (threads): " << m_systemInfo.dwNumberOfProcessors << L'\n';
+
+	WORD revision = m_systemInfo.wProcessorRevision;
+	BYTE model = HIBYTE(revision);
+	BYTE stepping = LOBYTE(revision);
+
+	std::wcout << L"CPU Model: " << model << L'\n';
+	std::wcout << L"Stepping: " << stepping << L'\n';
+
+	std::wcout << std::endl;
+}
+
+void Window::GetProcessorInfo()
+{
+	PSYSTEM_LOGICAL_PROCESSOR_INFORMATION buffer = NULL;
+	DWORD size = 0;
+
+	/*
+	typedef struct _SYSTEM_LOGICAL_PROCESSOR_INFORMATION
+	{
+		ULONG_PTR ProcessorMask;
+		LOGICAL_PROCESSOR_RELATIONSHIP Relationship;
+
+		union
+		{
+			struct
+			{
+				BYTE Flags;
+			} ProcessorCore;
+
+			struct
+			{
+				DWORD NodeNumber;
+			} NumaNode;
+
+			CACHE_DESCRIPTOR Cache;
+			ULONGLONG Reserved[2];
+		} DUMMYUNIONNAME;
+	} SYSTEM_LOGICAL_PROCESSOR_INFORMATION, *PSYSTEM_LOGICAL_PROCESSOR_INFORMATION;
+	*/
+	GetLogicalProcessorInformation(NULL, &size); // Get the required buffer size
+	buffer = (PSYSTEM_LOGICAL_PROCESSOR_INFORMATION)malloc(size);
+	if (buffer == NULL)
+	{
+		Window::LogLastError(L"Memory allocation failed");
+		throw std::runtime_error("Failed to allocate memory!");
+	}
+
+	if (!GetLogicalProcessorInformation(buffer, &size))
+	{
+		Window::LogLastError(L"GetLogicalProcessorInformation failed");
+		free(buffer);
+		throw std::runtime_error("Failed to call GetLogicalProcessorInformation!");
+	}
+
+	DWORD count = size / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
+	for (DWORD i = 0; i < count; ++i)
+	{
+		printf("Processor %u: Relationship = %d\n", i, buffer[i].Relationship);
+	}
+
+	free(buffer);
+
+	std::wcout << std::endl;
 }
 
 INT_PTR CALLBACK Window::About(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)

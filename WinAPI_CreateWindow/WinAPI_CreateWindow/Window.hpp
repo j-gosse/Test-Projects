@@ -28,6 +28,8 @@ private:
 
 	static constexpr const uint32_t WINDOW_WIDTH = 800;
 	static constexpr const uint32_t WINDOW_HEIGHT = 600;
+	LONG m_screenWidth = GetSystemMetrics(SM_CXSCREEN);
+	LONG m_screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
 	std::unique_ptr<KeyHandler> m_keyHandler;
 
@@ -55,6 +57,16 @@ private:
 	* @return	RegisterClassExW(&m_windowClass)
 	*/
 	ATOM RegisterWindowClass();
+
+	/**
+	* @brief	
+	*/
+	void GetSysInfo();
+
+	/**
+	* @brief	
+	*/
+	void GetProcessorInfo();
 
 	/**
 	* @brief	Callback function to generate the About message.
@@ -125,13 +137,13 @@ public:
 	void LogLastError(const wchar_t* desc);
 
 	/**
-	* @brief	Return the window handle.
+	* @brief	Get the window handle.
 	* @return	HWND m_hWindow
 	*/
 	HWND GetWindow() const { return m_hWindow; }
 
 	/**
-	* @brief	Return the key handler.
+	* @brief	Get the key handler.
 	* @return	KeyHandler m_keyHandler
 	*/
 	KeyHandler& GetKeyHandler() { return *m_keyHandler; }
