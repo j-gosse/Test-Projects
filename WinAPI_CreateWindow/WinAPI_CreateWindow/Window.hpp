@@ -16,7 +16,7 @@ class Window
 {
 private:
 	HWND m_hWindow;
-	WNDCLASSEX m_windowClass;
+	WNDCLASSEX m_mainWindowClass;
 	HINSTANCE m_hInstance;
 	HACCEL m_hAccelTable;
 	STARTUPINFO m_startupInfo;

@@ -6,7 +6,7 @@
 
 Window::Window(HINSTANCE hInstance) :
 	m_hWindow(nullptr),
-	m_windowClass({}),
+	m_mainWindowClass({}),
 	m_hInstance(hInstance),
 	m_hAccelTable(nullptr),
 	m_startupInfo({}),
@@ -38,10 +38,10 @@ Window::~Window()
 void Window::InitWindow()
 {
 	Window::GetSysInfo();
-	Window::GetProcessorInfo();
+	//Window::GetProcessorInfo();
 
 	LoadStringW(m_hInstance, IDS_WINDOW_TITLE, m_szTitle, MAX_LOADSTRING);
-	LoadStringW(m_hInstance, IDC_WINDOW_CLASS, m_szWindowClass, MAX_LOADSTRING);
+	LoadStringW(m_hInstance, IDS_WINDOW_CLASS, m_szWindowClass, MAX_LOADSTRING);
 	Window::RegisterWindowClass();
 
 	// nCmdShow controls how the window is to be shown
@@ -91,7 +91,7 @@ void Window::InitWindow()
 	ShowWindow(m_hWindow, nCmdShow);
 	UpdateWindow(m_hWindow);
 
-	m_hAccelTable = LoadAccelerators(m_hInstance, MAKEINTRESOURCE(IDC_WINDOW_CLASS));
+	m_hAccelTable = LoadAccelerators(m_hInstance, MAKEINTRESOURCE(IDR_ACCELERATOR));
 }
 
 BOOL Window::ProcessMessages() const
@@ -174,7 +174,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_CLOSE:
 		std::wcout << L"CASE: WM_CLOSE" << '\n';
-		if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"Particle Effects", MB_OKCANCEL) == IDOK)
+		if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"Create Window", MB_OKCANCEL) == IDOK)
 		{
 			Window::Cleanup();
 		}
@@ -189,7 +189,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			return 0;
 		case IDM_EXIT:
 			std::wcout << L"CASE: IDM_EXIT" << '\n';
-			if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"Particle Effects", MB_OKCANCEL) == IDOK)
+			if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"Create Window", MB_OKCANCEL) == IDOK)
 			{
 				Window::Cleanup();
 			}
@@ -224,27 +224,30 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 
 ATOM Window::RegisterWindowClass()
 {
-	m_windowClass.cbSize = sizeof(WNDCLASSEX);
-	m_windowClass.lpfnWndProc = Window::WindowProc;
-	m_windowClass.hInstance = m_hInstance;
-	m_windowClass.lpszClassName = Window::m_szWindowClass;
-	m_windowClass.style = CS_HREDRAW | CS_VREDRAW;
-	m_windowClass.lpszMenuName = MAKEINTRESOURCEW(IDC_WINDOW_CLASS);
-	m_windowClass.cbClsExtra = 0;
-	m_windowClass.cbWndExtra = 0;
-	m_windowClass.hCursor = LoadCursorW(nullptr, IDC_ARROW);
-	m_windowClass.hIcon = LoadIconW(m_hInstance, MAKEINTRESOURCE(IDI_PRIMARY));
-	m_windowClass.hIconSm = LoadIcon(m_windowClass.hInstance, MAKEINTRESOURCE(IDI_SMALL));
-	m_windowClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-	//m_windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-	//m_windowClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
+	int extraClassBytes = 0;
+	int extraWindowBytes = 0;
 
-	if (!RegisterClassExW(&m_windowClass))
+	m_mainWindowClass.cbSize = sizeof(WNDCLASSEX);
+	m_mainWindowClass.lpfnWndProc = Window::WindowProc;
+	m_mainWindowClass.hInstance = m_hInstance;
+	m_mainWindowClass.lpszClassName = Window::m_szWindowClass;
+	m_mainWindowClass.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS | CS_OWNDC;
+	m_mainWindowClass.lpszMenuName = MAKEINTRESOURCEW(IDR_MAINFRAME);
+	m_mainWindowClass.cbClsExtra = extraClassBytes;
+	m_mainWindowClass.cbWndExtra = extraWindowBytes;
+	m_mainWindowClass.hCursor = LoadCursorW(NULL, IDC_ARROW);
+	m_mainWindowClass.hIcon = LoadIconW(m_hInstance, MAKEINTRESOURCE(IDI_PRIMARY));
+	m_mainWindowClass.hIconSm = LoadIcon(m_mainWindowClass.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+	m_mainWindowClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	//m_mainWindowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+	//m_mainWindowClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
+
+	if (!RegisterClassExW(&m_mainWindowClass))
 	{
 		throw std::runtime_error("Failed to register the window class!");
 	}
 
-	return RegisterClassExW(&m_windowClass);
+	return RegisterClassExW(&m_mainWindowClass);
 }
 
 void Window::GetSysInfo()
@@ -393,33 +396,33 @@ INT_PTR CALLBACK Window::About(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 }
 
 void Window::LogLastError(const wchar_t* desc) {
-	DWORD eCode = GetLastError();
+	DWORD errorCode = GetLastError();
 
-	if (eCode == 0)
+	if (errorCode == 0)
 	{
 		std::wcout << desc << L": No error." << std::endl;
 		return;
 	}
 
-	wchar_t* eMsg = nullptr;
+	wchar_t* errorMsg = nullptr;
 
 	FormatMessageW(
 		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
 		nullptr,
-		eCode,
+		errorCode,
 		0,
-		reinterpret_cast<LPWSTR>(&eMsg),
+		reinterpret_cast<LPWSTR>(&errorMsg),
 		0,
 		nullptr
 	);
 
-	if (eMsg)
+	if (errorMsg)
 	{
-		std::wcout << desc << L" failed with error code " << eCode << L": " << eMsg << std::endl;
-		LocalFree(eMsg); // Free buffer allocated by FormatMessage
+		std::wcout << desc << L" failed with error code " << errorCode << L": " << errorMsg << std::endl;
+		LocalFree(errorMsg); // Free buffer allocated by FormatMessage
 	}
 	else
 	{
-		std::wcout << desc << L" failed with unknown error code: " << eCode << std::endl;
+		std::wcout << desc << L" failed with unknown error code: " << errorCode << std::endl;
 	}
 }
