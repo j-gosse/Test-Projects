@@ -2,7 +2,26 @@
 
 #include <lmcons.h>	// UNLEN and MAX_COMPUTERNAME_LENGTH
 
-/* CONSTRUCTOR */
+/* CONSTRUCTORS */
+
+Window::Window() :
+	m_hWindow(nullptr),
+	m_mainWindowClass({}),
+	m_hInstance(GetModuleHandleW(nullptr)),
+	m_hAccelTable(nullptr),
+	m_startupInfo({}),
+	m_szTitle(L""),
+	m_szWindowClass(L"")
+{
+	std::wcout << L"CONSTRUCTOR: Window()" << L'\n';
+
+	ZeroMemory(&m_startupInfo, sizeof(m_startupInfo));
+	m_startupInfo.cb = sizeof(m_startupInfo);
+	ZeroMemory(&m_processInfo, sizeof(m_processInfo));
+
+	m_startupInfo.dwFlags = STARTF_USESHOWWINDOW;
+	m_startupInfo.wShowWindow = SW_SHOW;
+}
 
 Window::Window(HINSTANCE hInstance) :
 	m_hWindow(nullptr),
@@ -13,8 +32,7 @@ Window::Window(HINSTANCE hInstance) :
 	m_processInfo({}),
 	m_systemInfo({}),
 	m_szTitle(L""),
-	m_szWindowClass(L""),
-	m_keyHandler(std::make_unique<KeyHandler>())
+	m_szWindowClass(L"")
 {
 	std::wcout << L"CONSTRUCTOR: Window(HINSTANCE hInstance)" << L'\n';
 
@@ -136,9 +154,6 @@ BOOL Window::ProcessMessages() const
 
 void Window::Cleanup()
 {
-	m_keyHandler.reset();
-	m_keyHandler = nullptr;
-
 	DestroyAcceleratorTable(m_hAccelTable);
 	m_hAccelTable = nullptr;
 
@@ -156,13 +171,10 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_KEYDOWN:
-		m_keyHandler->DispatchKeyDown(wParam);
 		return 0;
 	case WM_KEYUP:
-		m_keyHandler->DispatchKeyUp(wParam);
 		return 0;
 	case WM_CHAR:
-		m_keyHandler->DispatchChar(wParam);
 		return 0;
 	case WM_SIZE:
 		std::wcout << L"CASE: WM_SIZE" << '\n';

@@ -7,8 +7,8 @@
 
 #include "framework.h"
 #include "resource.h"
-#include "KeyHandler.hpp"
 
+#include <cstdio>
 #include <stdexcept>
 #include <iostream>
 
@@ -30,8 +30,6 @@ private:
 	static constexpr const uint32_t WINDOW_HEIGHT = 600;
 	LONG m_screenWidth = GetSystemMetrics(SM_CXSCREEN);
 	LONG m_screenHeight = GetSystemMetrics(SM_CYSCREEN);
-
-	std::unique_ptr<KeyHandler> m_keyHandler;
 
 	/**
 	* @brief	Handle messages sent to the window on a switch-case basis.
@@ -79,6 +77,11 @@ private:
 	static INT_PTR CALLBACK About(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 public:
+	/**
+	* @brief	Window Constructor.
+	*/
+	Window();
+
 	/**
 	* @brief	1-arg Window Constructor.
 	* @param	HINSTANCE hInstance : A handle to the window instance module.
@@ -141,12 +144,6 @@ public:
 	* @return	HWND m_hWindow
 	*/
 	HWND GetWindow() const { return m_hWindow; }
-
-	/**
-	* @brief	Get the key handler.
-	* @return	KeyHandler m_keyHandler
-	*/
-	KeyHandler& GetKeyHandler() { return *m_keyHandler; }
 };
 
 #endif

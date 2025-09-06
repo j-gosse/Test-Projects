@@ -1,5 +1,5 @@
 /*! \file       WinAPI_CreateWindow
-    \version    1.8
+    \version    1.9
     \desc	    Windows application for testing the creation of a window through use of the Windows API.
     \author     Jacob Gosse
     \date       September 1, 2025
@@ -23,9 +23,8 @@
 */
 
 #include "Window.hpp"
-#include "KeyController.hpp"
-#include <cstdio>
-#include <conio.h>
+
+#include <conio.h> // _getch()
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -56,9 +55,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
         std::unique_ptr<Window, std::default_delete<Window>> window = std::make_unique<Window>(hInstance);
         window->InitWindow();
 
-        std::unique_ptr<KeyController, std::default_delete<KeyController>> controller = std::make_unique<KeyController>();
-        window->GetKeyHandler().AddListener(controller.get());
-
         while (window->ProcessMessages())
         {
             currentTime = GetTickCount64();
@@ -73,9 +69,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
             Sleep(16);  // simulate ~60 FPS
         }
-
-        controller.reset();
-        controller = nullptr;
 
         window.reset();
         window = nullptr;
