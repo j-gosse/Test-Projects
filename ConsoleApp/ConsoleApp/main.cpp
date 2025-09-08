@@ -1,6 +1,6 @@
 /*! \file       ConsoleApp
     \version    1.1
-    \desc	    Windows desktop application that emulates a console window for output and an input bar for user input.
+    \desc	    Windows desktop application that emulates a console for output and an input bar for user input.
     \author     Jacob Gosse
     \date       September 6, 2025
 
