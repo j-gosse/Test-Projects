@@ -1,5 +1,5 @@
 /*! \file       ConsoleApp
-    \version    1.0
+    \version    1.1
     \desc	    Windows desktop application that emulates a console window for output and an input bar for user input.
     \author     Jacob Gosse
     \date       September 6, 2025
@@ -27,8 +27,6 @@
 */
 
 #include "Window.hpp"
-
-#include <conio.h> // _getch()
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {

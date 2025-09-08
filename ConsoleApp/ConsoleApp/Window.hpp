@@ -35,7 +35,7 @@ private:
 	* @param	LPARAM lParam : Provides additional message-specific information. Contains the new width and height of the window.
 	* @return	DefWindowProcW(m_hWindow, uMsg, wParam, lParam) when default switch case or return 0 when switch case
 	*/
-	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	LRESULT HandleMessages(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	/**
 	* @brief	Callback function to process event messages sent to the window.

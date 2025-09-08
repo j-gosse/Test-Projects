@@ -1,13 +1,5 @@
 #include "Window.hpp"
 
-#include <lmcons.h>	// UNLEN and MAX_COMPUTERNAME_LENGTH
-#include <io.h>
-#include <stdio.h>
-#include <thread>
-#include <fcntl.h>
-#include <string>
-#include <sstream>
-
 /* CONSTRUCTORS */
 
 Window::Window() :
@@ -116,7 +108,6 @@ void Window::InitWindow()
 	UpdateWindow(m_hWindow);
 
 	console = new Console(m_hWindow, m_hInstance);
-	console->AppendText(L"AppendText() called!\r\n");
 }
 
 BOOL Window::ProcessMessages() const
@@ -174,7 +165,7 @@ void Window::Cleanup()
 	}
 }
 
-LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT Window::HandleMessages(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -209,6 +200,24 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			return 0;
 		}
 		return 0;
+	case WM_CTLCOLORSTATIC:
+		std::wcout << L"CASE: WM_CTLCOLORSTATIC" << '\n';
+		if (console->GetConsoleWindow() == (HWND)lParam)
+		{
+			std::wcout << "SetConsoleColor" << L'\n';
+			HDC hdcEdit = (HDC)wParam;
+			return console->SetConsoleColor(hdcEdit);
+		}
+		return 0;
+	case WM_CTLCOLOREDIT:
+		std::wcout << L"CASE: WM_CTLCOLOREDIT" << '\n';
+		if (console->GetInputWindow() == (HWND)lParam)
+		{
+			std::wcout << "SetInputColor" << L'\n';
+			HDC hdcEdit = (HDC)wParam;
+			return console->SetInputColor(hdcEdit);
+		}
+		return 0;
 	case WM_CLOSE:
 		std::wcout << L"CASE: WM_CLOSE" << '\n';
 		if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"Windows App", MB_OKCANCEL) == IDOK)
@@ -241,7 +250,7 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 		pWindow = reinterpret_cast<Window*>(GetWindowLongPtrW(hWnd, GWLP_USERDATA));
 	}
 
-	if (pWindow) return pWindow->Window::HandleMessage(uMsg, wParam, lParam);
+	if (pWindow) return pWindow->Window::HandleMessages(uMsg, wParam, lParam);
 
 	return DefWindowProcW(hWnd, uMsg, wParam, lParam);
 }
