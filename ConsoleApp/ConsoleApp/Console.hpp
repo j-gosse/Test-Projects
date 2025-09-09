@@ -24,8 +24,8 @@ public:
 	Console(HWND hParentWindow, HINSTANCE hParentInstance);
 	virtual ~Console();
 
-	void AppendText(const std::wstring& text) const;
-	void SendText() const;
+	void InitConsole() const;
+	void SendInput() const;
 	INT_PTR SetConsoleColor(HDC hdcEdit) const;
 	INT_PTR SetInputColor(HDC hdcEdit) const;
 	void Cleanup();

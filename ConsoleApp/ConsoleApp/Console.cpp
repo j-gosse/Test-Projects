@@ -1,8 +1,10 @@
-// DefSubclassProc, SetWindowSubclass, RemoveWindowSubclass, etc. are implemented 
-// in comctl32.dll and declared in <commctrl.h>, must add comctl32.lib 
+// DefSubclassProc, SetWindowSubclass, RemoveWindowSubclass, etc. are implemented in 
+// comctl32.dll and declared in <commctrl.h>, must add comctl32.lib 
 // to Linker -> Input -> Additional Dependencies
 
 #include "Console.hpp"
+#include "Logger.hpp"
+
 #include <commctrl.h>
 
 /* CONSTRUCTORS */
@@ -83,8 +85,6 @@ Console::Console(HWND hParentWindow, HINSTANCE hParentInstance) :
 		m_hParentInstance,
 		nullptr
 	);
-
-	SetWindowTextW(m_hConsoleWindow, L"Console initialized...\r\n");
 }
 
 /* DESTRUCTOR */
@@ -127,7 +127,7 @@ LRESULT Console::HandleInputMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 		if (wParam == VK_RETURN)
 		{
 			std::wcout << L"CASE: VK_RETURN" << '\n';
-			Console::SendText();
+			Console::SendInput();
 			return 0;
 		}
 		return 0;
@@ -143,32 +143,16 @@ LRESULT Console::HandleInputMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 	}
 }
 
-void Console::AppendText(const std::wstring& text) const
+void Console::InitConsole() const
 {
-	int len = GetWindowTextLengthW(m_hConsoleWindow);
-	SendMessageW(m_hConsoleWindow, EM_SETSEL, len, len);
-	SendMessageW(m_hConsoleWindow, EM_REPLACESEL, FALSE, (LPARAM)text.c_str());
+	LOG_MSG(m_hConsoleWindow, L"Console initialized...");
+	LOG_ERR(m_hConsoleWindow, L"This is an error message!");
 }
 
-void Console::SendText() const
+void Console::SendInput() const
 {
-	// Read user input from input box
-	wchar_t inputBuffer[256] = {};
-	if (!GetWindowTextW(m_hInputWindow, inputBuffer, sizeof(inputBuffer) / sizeof(wchar_t))) return;
-
-	// Build the message string
-	std::wstringstream ss;
-	ss << L"> " << inputBuffer << L"\r\n";
-
-	// Append it to the output console area and move caret to the end
-	Console::AppendText(ss.str());
-
-	// Clear the input box
-	SetWindowTextW(m_hInputWindow, L"");
+	LOG_SEND(m_hInputWindow, m_hConsoleWindow);
 }
-
-//	SetBkColor(hdcEdit, RGB(255, 255, 255));	// Optional: Text background color
-//	SetTextColor(hdcEdit, RGB(0, 0, 0));		// Optional: Text color
 
 INT_PTR Console::SetConsoleColor(HDC hdcEdit) const
 {

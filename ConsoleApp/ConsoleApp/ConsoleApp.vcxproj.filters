@@ -33,6 +33,9 @@
     <ClCompile Include="Console.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -48,6 +51,9 @@
       <Filter>Header Files\Window</Filter>
     </ClInclude>
     <ClInclude Include="Console.hpp">
+      <Filter>Header Files\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.hpp">
       <Filter>Header Files\Console</Filter>
     </ClInclude>
   </ItemGroup>

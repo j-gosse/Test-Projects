@@ -108,6 +108,7 @@ void Window::InitWindow()
 	UpdateWindow(m_hWindow);
 
 	console = new Console(m_hWindow, m_hInstance);
+	console->InitConsole();
 }
 
 BOOL Window::ProcessMessages() const
@@ -185,7 +186,7 @@ LRESULT Window::HandleMessages(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 		case ID_BUTTON_SEND:
 			std::wcout << L"CASE: ID_BUTTON_SEND" << '\n';
-			console->SendText();
+			console->SendInput();
 			return 0;
 		case IDM_ABOUT:
 			std::wcout << L"CASE: IDM_ABOUT" << '\n';
