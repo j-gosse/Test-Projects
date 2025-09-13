@@ -48,8 +48,8 @@ ID Range		Description
 // command IDs
 #define IDM_ABOUT			32768
 #define IDM_EXIT			32769
-#define ID_EDIT_OUTPUT		32770
-#define ID_EDIT_INPUT		32771
+#define ID_CONSOLE_OUTPUT	32770
+#define ID_CONSOLE_INPUT	32771
 #define ID_BUTTON_SEND		32772
 
 // default static control ID

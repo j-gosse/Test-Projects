@@ -1,6 +1,6 @@
 /*! \file       ConsoleApp
-    \version    1.2
-    \desc	    Windows desktop application that emulates a console for output and an input bar for user input.
+    \version    1.3
+    \desc	    Windows desktop application that emulates a console for output and creates an input bar for user input.
     \author     Jacob Gosse
     \date       September 6, 2025
 
@@ -20,10 +20,6 @@
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-
-    \note
-    // memory leak checking code
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 */
 
 #include "Window.hpp"
@@ -77,6 +73,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
         std::cout << "Program finished. Press any key to continue..." << std::endl;
         _getch(); // Waits for a single character input
+
+        // memory leak checking code
+        //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
         return 0;
     }

@@ -11,17 +11,17 @@ class Window
 {
 private:
 	HWND m_hWindow;
-	WNDCLASSEX m_mainWindowClass;
+	WNDCLASSEX m_WindowClass;
 	HINSTANCE m_hInstance;
 	HACCEL m_hAccelTable;
 	STARTUPINFO m_startupInfo;
 	PROCESS_INFORMATION m_processInfo;
 	SYSTEM_INFO m_systemInfo;
 
-	Console* console;
+	Console* m_pConsole;
 
-	WCHAR m_szTitle[MAX_LOADSTRING];
-	WCHAR m_szWindowClass[MAX_LOADSTRING];
+	WCHAR m_WindowName[MAX_LOADSTRING];
+	WCHAR m_WindowClassName[MAX_LOADSTRING];
 
 	static constexpr const LONG WINDOW_WIDTH = 800;
 	static constexpr const LONG WINDOW_HEIGHT = 600;

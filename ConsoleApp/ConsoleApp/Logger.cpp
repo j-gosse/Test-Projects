@@ -41,7 +41,7 @@ void Logger::Log(HWND hConsoleWindow, const std::wstring& text)
 
 void Logger::Send(HWND hInputWindow, HWND hConsoleWindow)
 {
-    wchar_t inputBuffer[256] = {};
+    wchar_t inputBuffer[256] = {}; // TODO: implement dynamic buffer size
     if (!GetWindowTextW(hInputWindow, inputBuffer, sizeof(inputBuffer) / sizeof(wchar_t))) return;
 
     std::wstringstream ss;
@@ -49,13 +49,12 @@ void Logger::Send(HWND hInputWindow, HWND hConsoleWindow)
 
     Logger::Log(hConsoleWindow, ss.str());
     SetWindowTextW(hInputWindow, L"");
-    SetFocus(hInputWindow);
 }
 
 void Logger::Error(HWND hConsoleWindow, const std::wstring& text, std::source_location location)
 {
     std::wstringstream ss;
-    ss << L"ERROR: " << CurrentDate() << " - " << text << L" FILE: " << location.file_name() << L" FUNC: " << location.function_name() << L" LINE: " << location.line() << L"\r\n";
+    ss << L"ERROR: " << text << L" FILE: " << location.file_name() << L" FUNC: " << location.function_name() << L" LINE: " << location.line();
     
     Logger::Log(hConsoleWindow, ss.str());
 }
