@@ -22,8 +22,6 @@ private:
 	LRESULT HandleConsoleMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 	static LRESULT CALLBACK InputProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
 	LRESULT HandleInputMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
-	static LRESULT CALLBACK ButtonProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
-	LRESULT HandleButtonMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 
 public:
 	Console(LONG parentWindowWidth, LONG parentWindowHeight);

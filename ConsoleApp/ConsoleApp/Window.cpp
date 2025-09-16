@@ -109,7 +109,7 @@ void Window::InitWindow()
 	UpdateWindow(m_hWindow);
 
 	// init console
-	m_pConsole = new Console(m_hWindow, m_hInstance, WINDOW_WIDTH, WINDOW_HEIGHT);
+	m_pConsole = new Console(m_hWindow, m_hInstance, Window::WINDOW_WIDTH, Window::WINDOW_HEIGHT);
 }
 
 BOOL Window::ProcessMessages() const
@@ -178,23 +178,23 @@ LRESULT Window::HandleMessages(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_CHAR:
 		return 0;
 	case WM_SIZE:
-		std::wcout << L"CASE: WM_SIZE" << '\n';
-		std::wcout << LOWORD(lParam) << L'x' << HIWORD(lParam) << '\n';
+		std::wcout << L"CASE: WM_SIZE" << L'\n';
+		std::wcout << LOWORD(lParam) << L'x' << HIWORD(lParam) << L'\n';
 		m_pConsole->ResizeWindows(wParam, lParam);
 		return 0;
 	case WM_COMMAND:
-		std::wcout << L"CASE: WM_COMMAND" << '\n';
+		std::wcout << L"CASE: WM_COMMAND" << L'\n';
 		switch (LOWORD(wParam))
 		{
 		case ID_BUTTON_SEND:
 			SetFocus(m_pConsole->GetInputWindow());
 			return 0;
 		case IDM_ABOUT:
-			std::wcout << L"CASE: IDM_ABOUT" << '\n';
+			std::wcout << L"CASE: IDM_ABOUT" << L'\n';
 			DialogBox(m_hInstance, MAKEINTRESOURCE(IDD_ABOUTBOX), m_hWindow, About);
 			return 0;
 		case IDM_EXIT:
-			std::wcout << L"CASE: IDM_EXIT" << '\n';
+			std::wcout << L"CASE: IDM_EXIT" << L'\n';
 			if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"Console App", MB_OKCANCEL) == IDOK)
 			{
 				Window::Cleanup();
@@ -203,20 +203,20 @@ LRESULT Window::HandleMessages(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		return 0;
 	case WM_CTLCOLORSTATIC:
-		std::wcout << L"CASE: WM_CTLCOLORSTATIC" << '\n';
+		std::wcout << L"CASE: WM_CTLCOLORSTATIC" << L'\n';
 		return 0;
 	case WM_CTLCOLOREDIT:
-		std::wcout << L"CASE: WM_CTLCOLOREDIT" << '\n';
+		std::wcout << L"CASE: WM_CTLCOLOREDIT" << L'\n';
 		return 0;
 	case WM_CLOSE:
-		std::wcout << L"CASE: WM_CLOSE" << '\n';
+		std::wcout << L"CASE: WM_CLOSE" << L'\n';
 		if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"Console App", MB_OKCANCEL) == IDOK)
 		{
 			Window::Cleanup();
 		}
 		return 0;
 	case WM_DESTROY:
-		std::wcout << L"CASE: WM_DESTROY" << '\n';
+		std::wcout << L"CASE: WM_DESTROY" << L'\n';
 		PostQuitMessage(0);
 		return 0;
 	default:

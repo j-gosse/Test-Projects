@@ -5,7 +5,6 @@
 #include "Console.hpp"
 #include "Logger.hpp"
 
-#include <tchar.h>
 #include <richedit.h>
 #include <commctrl.h>
 
@@ -124,7 +123,7 @@ Console::Console(HWND hParentWindow, HINSTANCE hParentInstance, LONG parentWindo
 		throw std::runtime_error("Failed to create the send button!");
 	}
 
-	SetWindowSubclass(m_hSendButton, Console::ButtonProc, 1, (DWORD_PTR)this);
+	SetWindowSubclass(m_hSendButton, Console::InputProc, 1, (DWORD_PTR)this);
 
 	Console::SetConsoleColor();
 	Console::SetInputColor();
@@ -185,33 +184,16 @@ LRESULT Console::HandleInputMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			return 0;
 		}
 		return DefSubclassProc(hWnd, uMsg, wParam, lParam);
-	default:
-		return DefSubclassProc(hWnd, uMsg, wParam, lParam);
-	}
-}
-
-LRESULT CALLBACK Console::ButtonProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData)
-{
-	Console* pThis = reinterpret_cast<Console*>(dwRefData);
-	return pThis->HandleButtonMessages(hWnd, uMsg, wParam, lParam);
-}
-
-LRESULT Console::HandleButtonMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const
-{
-	switch (uMsg)
-	{
 	case WM_LBUTTONDOWN:
 	{
 		std::wcout << L"CASE: WM_LBUTTONDOWN" << L'\n';
 		INT id = GetDlgCtrlID(hWnd);
-		if (id == ID_BUTTON_SEND) SendInput();
+		if (id == ID_BUTTON_SEND) Console::SendInput();
 		return DefSubclassProc(hWnd, uMsg, wParam, lParam);
 	}
 	case WM_LBUTTONUP:
-	{
 		std::wcout << L"CASE: WM_LBUTTONUP" << L'\n';
 		return DefSubclassProc(hWnd, uMsg, wParam, lParam);
-	}
 	default:
 		return DefSubclassProc(hWnd, uMsg, wParam, lParam);
 	}
@@ -288,7 +270,7 @@ void Console::SetInputColor() const
 
 void Console::Cleanup()
 {
-	RemoveWindowSubclass(m_hSendButton, Console::ButtonProc, 1);
+	RemoveWindowSubclass(m_hSendButton, Console::InputProc, 1);
 	RemoveWindowSubclass(m_hInputWindow, Console::InputProc, 1);
 	RemoveWindowSubclass(m_hConsoleWindow, Console::ConsoleProc, 1);
 

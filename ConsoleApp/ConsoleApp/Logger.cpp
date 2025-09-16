@@ -4,6 +4,7 @@
 #include <chrono>
 #include <ctime>
 #include <iostream>
+#include <vector>
 
 /* CONSTRUCTOR */
 
@@ -31,7 +32,7 @@ std::wstring Logger::CurrentDate()
 void Logger::Log(HWND hConsoleWindow, const std::wstring& text)
 {
     std::wstringstream ss;
-    ss << CurrentDate() << L" - " << text << L"\r\n";
+    ss << Logger::CurrentDate() << L" - " << text << L"\r\n";
     std::wstring msg = ss.str();
 
     int len = GetWindowTextLengthW(hConsoleWindow);
@@ -41,11 +42,14 @@ void Logger::Log(HWND hConsoleWindow, const std::wstring& text)
 
 void Logger::Send(HWND hInputWindow, HWND hConsoleWindow)
 {
-    wchar_t inputBuffer[256] = {}; // TODO: implement dynamic buffer size
-    if (!GetWindowTextW(hInputWindow, inputBuffer, sizeof(inputBuffer) / sizeof(wchar_t))) return;
+    int charLength = GetWindowTextLengthW(hInputWindow);
+    if (charLength <= 0) return;
+
+    std::vector<wchar_t> buffer(charLength + 1);
+    if (!GetWindowTextW(hInputWindow, buffer.data(), charLength + 1)) return;
 
     std::wstringstream ss;
-    ss << inputBuffer;
+    ss << buffer.data();
 
     Logger::Log(hConsoleWindow, ss.str());
     SetWindowTextW(hInputWindow, L"");
