@@ -117,6 +117,11 @@ void Renderer::PaintBuffer()
 	//}
 }
 
+void Renderer::Update()
+{
+	keyHandler.UpdateButtonState();
+}
+
 inline static int
 clamp(int min, int val, int max)
 {
@@ -125,7 +130,7 @@ clamp(int min, int val, int max)
 	return val;
 }
 
-void Renderer::DrawArcPixel(int centerX, int centerY, int radius, unsigned int color)
+void Renderer::DrawCirclePixel(int centerX, int centerY, int radius, unsigned int color)
 {
 	// check to ensure pixels are not drawn outside of the window
 	//if (centerX < 0 || centerX >= m_bufferWidth || centerY < 0 || centerY >= m_bufferHeight) return;
@@ -155,20 +160,20 @@ void Renderer::DrawArcPixel(int centerX, int centerY, int radius, unsigned int c
 	}
 }
 
-void Renderer::DrawArc(float x, float y, float radius, unsigned int color)
+void Renderer::DrawCircle(float cX, float cY, float r, unsigned int color)
 {
-	x *= m_bufferHeight * m_renderScale;
-	y *= m_bufferHeight * m_renderScale;
-	radius *= m_bufferHeight * m_renderScale;
+	cX *= m_bufferHeight * m_renderScale;
+	cY *= m_bufferHeight * m_renderScale;
+	r *= m_bufferHeight * m_renderScale;
 
-	x += m_bufferWidth / 2.f;
-	y += m_bufferHeight / 2.f;
+	cX += m_bufferWidth / 2.f;
+	cY += m_bufferHeight / 2.f;
 
-	int centerX = static_cast<int>(x);
-	int centerY = static_cast<int>(y);
-	int rad = static_cast<int>(radius);
+	int centerX = static_cast<int>(cX);
+	int centerY = static_cast<int>(cY);
+	int radius = static_cast<int>(r);
 
-	DrawArcPixel(centerX, centerY, rad, color);
+	DrawCirclePixel(centerX, centerY, radius, color);
 }
 
 // x0/y0 represent the top left position of the rectangle, and x1/y1 the bottom right position

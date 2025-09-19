@@ -131,6 +131,11 @@ public:
 	BOOL ProcessMessages() const;
 
 	/**
+	* @brief	Update the pixel buffer and keyboard input.
+	*/
+	void Update();
+
+	/**
 	* @brief	Render the pixel buffer to the main window.
 	*/
 	void Render() const;

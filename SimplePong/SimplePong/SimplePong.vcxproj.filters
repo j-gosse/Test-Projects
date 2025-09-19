@@ -30,6 +30,9 @@
     <ClCompile Include="Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="KeyHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -46,6 +49,9 @@
     </ClInclude>
     <ClInclude Include="Renderer.hpp">
       <Filter>Header Files\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyHandler.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,5 @@
 /*! \file       SimplePong
-    \version    1.0
+    \version    1.1
     \desc	    Windows desktop application for a simple pong game.
     \author     Jacob Gosse
     \date       September 16, 2025
@@ -69,6 +69,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
                 obj->Render(window->GetWindow());
             */
 
+            window->Update();
             window->Render();
 
             Sleep(16);  // simulate ~60 FPS

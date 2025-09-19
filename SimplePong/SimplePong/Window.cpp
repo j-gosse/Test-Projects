@@ -152,12 +152,17 @@ BOOL Window::ProcessMessages() const
 }
 */
 
+void Window::Update()
+{
+	m_pRenderer->Update();
+}
+
 void Window::Render() const
 {
 	m_pRenderer->ClearBuffer();
 	m_pRenderer->PaintBuffer();
-	m_pRenderer->DrawArc(0, 0, 1, 0xFF0000);
-	m_pRenderer->DrawRect(50, 25, 3, 10, 0xFF0000);
+	if (m_pRenderer->keyHandler.IsButtonDown(BUTTON_UP)) m_pRenderer->DrawCircle(0, 0, 1, 0xFF0000);
+	m_pRenderer->DrawRect(50, 0, 1, 10, 0xFF0000);
 	m_pRenderer->Draw();
 }
 
@@ -183,8 +188,10 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_KEYDOWN:
+		m_pRenderer->keyHandler.OnKeyDown(wParam);
 		return 0;
 	case WM_KEYUP:
+		m_pRenderer->keyHandler.OnKeyUp(wParam);
 		return 0;
 	case WM_CHAR:
 		return 0;
