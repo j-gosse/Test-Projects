@@ -152,17 +152,24 @@ BOOL Window::ProcessMessages() const
 }
 */
 
+inline static float xPos = 50.f;
+inline static float yPos = 0.f;
+
 void Window::Update()
 {
-	m_pRenderer->Update();
+	m_keyHandler.UpdateButtonState();
+	if (m_keyHandler.IsButtonDown(BUTTON_LEFT)) xPos -= 1;
+	if (m_keyHandler.IsButtonDown(BUTTON_RIGHT)) xPos += 1;
+	if (m_keyHandler.IsButtonDown(BUTTON_UP)) yPos -= 1;
+	if (m_keyHandler.IsButtonDown(BUTTON_DOWN)) yPos += 1;
 }
 
 void Window::Render() const
 {
 	m_pRenderer->ClearBuffer();
 	m_pRenderer->PaintBuffer();
-	if (m_pRenderer->keyHandler.IsButtonDown(BUTTON_UP)) m_pRenderer->DrawCircle(0, 0, 1, 0xFF0000);
-	m_pRenderer->DrawRect(50, 0, 1, 10, 0xFF0000);
+	m_pRenderer->DrawRect(xPos, yPos, 1, 10, 0xFF0000);
+	m_pRenderer->DrawCircle(0, 0, 1, 0xFF0000);
 	m_pRenderer->Draw();
 }
 
@@ -188,10 +195,10 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_KEYDOWN:
-		m_pRenderer->keyHandler.OnKeyDown(wParam);
+		m_keyHandler.OnKeyDown(wParam);
 		return 0;
 	case WM_KEYUP:
-		m_pRenderer->keyHandler.OnKeyUp(wParam);
+		m_keyHandler.OnKeyUp(wParam);
 		return 0;
 	case WM_CHAR:
 		return 0;
@@ -199,7 +206,6 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		std::wcout << L"CASE: WM_SIZE" << L'\n';
 		std::wcout << LOWORD(lParam) << L'x' << HIWORD(lParam) << L'\n';
-
 		m_screenWidth = LOWORD(lParam);
 		m_screenHeight = HIWORD(lParam);
 		m_pRenderer->ResizeBuffer(m_screenWidth, m_screenHeight);

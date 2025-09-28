@@ -21,7 +21,6 @@ KeyHandler::~KeyHandler()
 void KeyHandler::OnKeyDown(WPARAM key)
 {
 	m_keyState[key] = true;
-	std::wcout << key << L'\n';
 }
 
 void KeyHandler::OnKeyUp(WPARAM key)
@@ -47,6 +46,7 @@ void KeyHandler::UpdateButtonState()
     m_buttonState[BUTTON_DOWN] = IsDown(VK_DOWN) || IsDown('S');
     m_buttonState[BUTTON_LEFT] = IsDown(VK_LEFT) || IsDown('A');
     m_buttonState[BUTTON_RIGHT] = IsDown(VK_RIGHT) || IsDown('D');
+	m_buttonState[BUTTON_ACTION] = IsDown(VK_SPACE);
 }
 
 bool KeyHandler::IsButtonDown(int button) const

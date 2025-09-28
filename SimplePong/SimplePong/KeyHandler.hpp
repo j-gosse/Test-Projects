@@ -12,6 +12,7 @@ enum
     BUTTON_DOWN,
     BUTTON_LEFT,
     BUTTON_RIGHT,
+    BUTTON_ACTION,
 
     BUTTON_COUNT
 };

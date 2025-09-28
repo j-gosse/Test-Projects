@@ -5,8 +5,6 @@
 
 #include <windows.h>
 
-#include "KeyHandler.hpp"
-
 class Renderer
 {
 private:
@@ -22,12 +20,9 @@ public:
 	Renderer(HWND hWnd);
 	virtual ~Renderer();
 
-	KeyHandler keyHandler;
-
 	void ResizeBuffer(int screenWidth, int screenHeight);
 	void ClearBuffer();
 	void PaintBuffer();
-	void Update();
 
 	void DrawCirclePixel(int centerX, int centerY, int radius, unsigned int color);
 	void DrawCircle(float cX, float cY, float r, unsigned int color);

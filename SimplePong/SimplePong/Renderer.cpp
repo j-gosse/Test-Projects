@@ -60,11 +60,6 @@ Renderer::~Renderer()
 
 void Renderer::ResizeBuffer(int screenWidth, int screenHeight)
 {
-	//RECT rect;
-	//GetClientRect(m_hWindow, &rect);
-	//m_bufferWidth = rect.right - rect.left;
-	//m_bufferHeight = rect.bottom - rect.top;
-
 	m_bufferWidth = screenWidth;
 	m_bufferHeight = screenHeight;
 	m_bufferBitmapInfo.bmiHeader.biWidth = static_cast<LONG>(m_bufferWidth);
@@ -115,11 +110,6 @@ void Renderer::PaintBuffer()
 	//	pixel[i * 4 + 2] = rand() % 256;		// Red
 	//	pixel[i * 4 + 3] = 0;					// Alpha (ignored)
 	//}
-}
-
-void Renderer::Update()
-{
-	keyHandler.UpdateButtonState();
 }
 
 inline static int

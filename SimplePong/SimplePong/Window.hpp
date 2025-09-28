@@ -9,6 +9,7 @@
 #include "resource.h"
 
 #include "Renderer.hpp"
+#include "KeyHandler.hpp"
 
 class Window
 {
@@ -32,6 +33,7 @@ private:
 	int m_screenHeight = WINDOW_HEIGHT;
 
 	Renderer* m_pRenderer;
+	
 
 	/**
 	* @brief	Handle messages sent to the window on a switch-case basis.
@@ -156,6 +158,8 @@ public:
 	* @return	HWND m_hWindow
 	*/
 	HWND GetWindow() const { return m_hWindow; }
+
+	KeyHandler m_keyHandler;
 };
 
 #endif

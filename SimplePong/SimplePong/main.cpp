@@ -1,5 +1,5 @@
 /*! \file       SimplePong
-    \version    1.1
+    \version    1.2
     \desc	    Windows desktop application for a simple pong game.
     \author     Jacob Gosse
     \date       September 16, 2025
