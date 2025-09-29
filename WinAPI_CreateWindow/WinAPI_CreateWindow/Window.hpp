@@ -8,28 +8,26 @@
 #include "framework.h"
 #include "resource.h"
 
-#include <cstdio>
-#include <stdexcept>
-#include <iostream>
-
 class Window
 {
 private:
 	HWND m_hWindow;
-	WNDCLASSEX m_mainWindowClass;
+	WNDCLASSEX m_windowClass;
 	HINSTANCE m_hInstance;
 	HACCEL m_hAccelTable;
 	STARTUPINFO m_startupInfo;
 	PROCESS_INFORMATION m_processInfo;
 	SYSTEM_INFO m_systemInfo;
 
-	WCHAR m_szTitle[MAX_LOADSTRING];		// title bar text
-	WCHAR m_szWindowClass[MAX_LOADSTRING];	// main window class name
+	WCHAR m_windowName[MAX_LOADSTRING];
+	WCHAR m_windowClassName[MAX_LOADSTRING];
 
-	static constexpr const uint32_t WINDOW_WIDTH = 800;
-	static constexpr const uint32_t WINDOW_HEIGHT = 600;
-	LONG m_screenWidth = GetSystemMetrics(SM_CXSCREEN);
-	LONG m_screenHeight = GetSystemMetrics(SM_CYSCREEN);
+	static constexpr const LONG WINDOW_WIDTH = 800;
+	static constexpr const LONG WINDOW_HEIGHT = 600;
+	int m_screenWidth = WINDOW_WIDTH;
+	int m_screenHeight = WINDOW_HEIGHT;
+	LONG m_desktopWidth = GetSystemMetrics(SM_CXSCREEN);
+	LONG m_desktopHeight = GetSystemMetrics(SM_CYSCREEN);
 
 	/**
 	* @brief	Handle messages sent to the window on a switch-case basis.
@@ -57,12 +55,12 @@ private:
 	ATOM RegisterWindowClass();
 
 	/**
-	* @brief	
+	* @brief	Retrieve username, computer name, processor architecture and CPU information.
 	*/
 	void GetSysInfo();
 
 	/**
-	* @brief	
+	* @brief	Retrieve logical processor count and relationships.
 	*/
 	void GetProcessorInfo();
 

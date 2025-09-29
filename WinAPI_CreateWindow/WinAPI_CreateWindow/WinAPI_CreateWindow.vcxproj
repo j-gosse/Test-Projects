@@ -125,7 +125,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="win32_platform.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +140,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource_script.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="NOTICE.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

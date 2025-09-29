@@ -1,17 +1,15 @@
 #include "Window.hpp"
 
-#include <lmcons.h>	// UNLEN and MAX_COMPUTERNAME_LENGTH
-
 /* CONSTRUCTORS */
 
 Window::Window() :
 	m_hWindow(nullptr),
-	m_mainWindowClass({}),
+	m_windowClass({}),
 	m_hInstance(GetModuleHandleW(nullptr)),
 	m_hAccelTable(nullptr),
 	m_startupInfo({}),
-	m_szTitle(L""),
-	m_szWindowClass(L"")
+	m_windowName(L""),
+	m_windowClassName(L"")
 {
 	std::wcout << L"CONSTRUCTOR: Window()" << L'\n';
 
@@ -25,14 +23,12 @@ Window::Window() :
 
 Window::Window(HINSTANCE hInstance) :
 	m_hWindow(nullptr),
-	m_mainWindowClass({}),
+	m_windowClass({}),
 	m_hInstance(hInstance),
 	m_hAccelTable(nullptr),
 	m_startupInfo({}),
-	m_processInfo({}),
-	m_systemInfo({}),
-	m_szTitle(L""),
-	m_szWindowClass(L"")
+	m_windowName(L""),
+	m_windowClassName(L"")
 {
 	std::wcout << L"CONSTRUCTOR: Window(HINSTANCE hInstance)" << L'\n';
 
@@ -58,12 +54,14 @@ void Window::InitWindow()
 	Window::GetSysInfo();
 	//Window::GetProcessorInfo();
 
-	LoadStringW(m_hInstance, IDS_WINDOW_TITLE, m_szTitle, MAX_LOADSTRING);
-	LoadStringW(m_hInstance, IDS_WINDOW_CLASS, m_szWindowClass, MAX_LOADSTRING);
+	m_hAccelTable = LoadAccelerators(m_hInstance, MAKEINTRESOURCE(IDR_ACCELERATOR));
+
+	LoadStringW(m_hInstance, IDS_WINDOW_TITLE, m_windowName, MAX_LOADSTRING);
+	LoadStringW(m_hInstance, IDS_WINDOW_CLASS, m_windowClassName, MAX_LOADSTRING);
 	Window::RegisterWindowClass();
 
 	// nCmdShow controls how the window is to be shown
-	// Paremeter is ignored the first time an application calls show window if STARTUPINFO structure specified
+	// parameter is ignored the first time an application calls show window if STARTUPINFO structure specified
 	int nCmdShow = (m_startupInfo.dwFlags & STARTF_USESHOWWINDOW) ? m_startupInfo.wShowWindow : SW_SHOWDEFAULT;
 
 	DWORD dwExStyle = 0;
@@ -74,8 +72,8 @@ void Window::InitWindow()
 
 	m_hWindow = CreateWindowExW(//HWND CreateWindowExW(
 		dwExStyle,				//[in]			 DWORD	   dwExStyle,
-		Window::m_szWindowClass,//[in, optional] LPCSTR    lpClassName,
-		Window::m_szTitle,		//[in, optional] LPCSTR    lpWindowName,
+		m_windowClassName,		//[in, optional] LPCSTR    lpClassName,
+		m_windowName,			//[in, optional] LPCSTR    lpWindowName,
 		WS_OVERLAPPEDWINDOW,	//[in]           DWORD     dwStyle,
 		CW_USEDEFAULT,			//[in]           int       X,
 		CW_USEDEFAULT,			//[in]           int       Y,
@@ -92,9 +90,21 @@ void Window::InitWindow()
 		throw std::runtime_error("Failed to create the window!");
 	}
 
+	// Register to receive raw input from keyboards
+	RAWINPUTDEVICE rid{};
+	rid.usUsagePage = 0x01;	// Generic desktop controls
+	rid.usUsage = 0x06;		// Keyboard
+	rid.dwFlags = 0;		// No RIDEV_INPUTSINK, so only receive input when focused
+	rid.hwndTarget = m_hWindow;
+
+	if (!RegisterRawInputDevices(&rid, 1, sizeof(rid)))
+	{
+		throw std::runtime_error("Failed to register raw input device!");
+	}
+
 	// set window position centered relative to screen resolution
-	int centerWidth = (m_screenWidth - windowWidth) / 2;
-	int centerHeight = (m_screenHeight - windowHeight) / 2;
+	int centerWidth = (m_desktopWidth - windowWidth) / 2;
+	int centerHeight = (m_desktopHeight - windowHeight) / 2;
 
 	SetWindowPos(				//BOOL SetWindowPos(
 		m_hWindow,				//[in]           HWND hWnd,
@@ -106,10 +116,9 @@ void Window::InitWindow()
 		SWP_SHOWWINDOW			//[in]           UINT uFlags // The window sizing and positioning flags
 	);
 
+	// display window
 	ShowWindow(m_hWindow, nCmdShow);
 	UpdateWindow(m_hWindow);
-
-	m_hAccelTable = LoadAccelerators(m_hInstance, MAKEINTRESOURCE(IDR_ACCELERATOR));
 }
 
 BOOL Window::ProcessMessages() const
@@ -118,17 +127,21 @@ BOOL Window::ProcessMessages() const
 	UINT msgFilterMin = 0;
 	UINT msgFilterMax = 0;
 
-	while (PeekMessageW(&msg, m_hWindow, msgFilterMin, msgFilterMax, PM_REMOVE))
+	while (PeekMessageW(&msg, nullptr, msgFilterMin, msgFilterMax, PM_REMOVE))
 	{
 		if (msg.message == WM_QUIT) return FALSE;
 
-		if (!TranslateAccelerator(msg.hwnd, m_hAccelTable, &msg))
+		if (m_hAccelTable && !TranslateAcceleratorW(msg.hwnd, m_hAccelTable, &msg))
 		{
 			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+			DispatchMessageW(&msg);
+		}
+		else
+		{
+			TranslateMessage(&msg);
+			DispatchMessageW(&msg);
 		}
 	}
-
 	return TRUE;
 }
 
@@ -136,15 +149,13 @@ BOOL Window::ProcessMessages() const
 BOOL Window::ProcessMessages() const
 {
 	MSG msg = {};
-	UINT msgFilterMin = 0;
-	UINT msgFilterMax = 0;
 
-	while (GetMessage(&msg, m_hWindow, msgFilterMin, msgFilterMax))
+	while (GetMessage(&msg, nullptr, 0, 0))
 	{
-		if (!TranslateAccelerator(msg.hwnd, m_hAccelTable, &msg))
+		if (!TranslateAcceleratorW(msg.hwnd, m_hAccelTable, &msg))
 		{
 			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+			DispatchMessageW(&msg);
 		}
 	}
 
@@ -160,7 +171,7 @@ void Window::Cleanup()
 	DestroyWindow(m_hWindow);
 	m_hWindow = nullptr;
 
-	if (!UnregisterClassW(Window::m_szWindowClass, m_hInstance))
+	if (!UnregisterClassW(Window::m_windowClassName, m_hInstance))
 	{
 		throw std::runtime_error("Failed to unregister the window class!");
 	}
@@ -177,36 +188,38 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_CHAR:
 		return 0;
 	case WM_SIZE:
-		std::wcout << L"CASE: WM_SIZE" << '\n';
-		std::wcout << LOWORD(lParam) << L'x' << HIWORD(lParam) << '\n';
-		return 0;
-	case WM_DESTROY:
-		std::wcout << L"CASE: WM_DESTROY" << '\n';
-		PostQuitMessage(0);
+		std::wcout << L"CASE: WM_SIZE" << L'\n';
+		std::wcout << LOWORD(lParam) << L'x' << HIWORD(lParam) << L'\n';
+		m_screenWidth = LOWORD(lParam);
+		m_screenHeight = HIWORD(lParam);
 		return 0;
 	case WM_CLOSE:
-		std::wcout << L"CASE: WM_CLOSE" << '\n';
-		if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"Create Window", MB_OKCANCEL) == IDOK)
+		std::wcout << L"CASE: WM_CLOSE" << L'\n';
+		if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"Windows App", MB_OKCANCEL) == IDOK)
 		{
 			Window::Cleanup();
 		}
 		return 0;
 	case WM_COMMAND:
-		std::wcout << L"CASE: WM_COMMAND" << '\n';
+		std::wcout << L"CASE: WM_COMMAND" << L'\n';
 		switch (LOWORD(wParam))
 		{
 		case IDM_ABOUT:
-			std::wcout << L"CASE: IDM_ABOUT" << '\n';
+			std::wcout << L"CASE: IDM_ABOUT" << L'\n';
 			DialogBox(m_hInstance, MAKEINTRESOURCE(IDD_ABOUTBOX), m_hWindow, About);
 			return 0;
 		case IDM_EXIT:
-			std::wcout << L"CASE: IDM_EXIT" << '\n';
-			if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"Create Window", MB_OKCANCEL) == IDOK)
+			std::wcout << L"CASE: IDM_EXIT" << L'\n';
+			if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"Windows App", MB_OKCANCEL) == IDOK)
 			{
 				Window::Cleanup();
 			}
 			return 0;
 		}
+		return 0;
+	case WM_DESTROY:
+		std::wcout << L"CASE: WM_DESTROY" << L'\n';
+		PostQuitMessage(0);
 		return 0;
 	default:
 		return DefWindowProcW(m_hWindow, uMsg, wParam, lParam);
@@ -239,27 +252,27 @@ ATOM Window::RegisterWindowClass()
 	int extraClassBytes = 0;
 	int extraWindowBytes = 0;
 
-	m_mainWindowClass.cbSize = sizeof(WNDCLASSEX);
-	m_mainWindowClass.lpfnWndProc = Window::WindowProc;
-	m_mainWindowClass.hInstance = m_hInstance;
-	m_mainWindowClass.lpszClassName = Window::m_szWindowClass;
-	m_mainWindowClass.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS | CS_OWNDC;
-	m_mainWindowClass.lpszMenuName = MAKEINTRESOURCEW(IDR_MAINFRAME);
-	m_mainWindowClass.cbClsExtra = extraClassBytes;
-	m_mainWindowClass.cbWndExtra = extraWindowBytes;
-	m_mainWindowClass.hCursor = LoadCursorW(NULL, IDC_ARROW);
-	m_mainWindowClass.hIcon = LoadIconW(m_hInstance, MAKEINTRESOURCE(IDI_PRIMARY));
-	m_mainWindowClass.hIconSm = LoadIcon(m_mainWindowClass.hInstance, MAKEINTRESOURCE(IDI_SMALL));
-	m_mainWindowClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-	//m_mainWindowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-	//m_mainWindowClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
+	m_windowClass.cbSize = sizeof(WNDCLASSEX);
+	m_windowClass.lpfnWndProc = Window::WindowProc;
+	m_windowClass.hInstance = m_hInstance;
+	m_windowClass.lpszClassName = m_windowClassName;
+	m_windowClass.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS | CS_OWNDC;
+	m_windowClass.lpszMenuName = MAKEINTRESOURCEW(IDR_MAINFRAME);
+	m_windowClass.cbClsExtra = extraClassBytes;
+	m_windowClass.cbWndExtra = extraWindowBytes;
+	m_windowClass.hCursor = LoadCursorW(NULL, IDC_ARROW);
+	m_windowClass.hIcon = LoadIconW(m_hInstance, MAKEINTRESOURCE(IDI_PRIMARY));
+	m_windowClass.hIconSm = LoadIcon(m_windowClass.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+	m_windowClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	//m_windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+	//m_windowClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 
-	if (!RegisterClassExW(&m_mainWindowClass))
+	if (!RegisterClassExW(&m_windowClass))
 	{
 		throw std::runtime_error("Failed to register the window class!");
 	}
 
-	return RegisterClassExW(&m_mainWindowClass);
+	return RegisterClassExW(&m_windowClass);
 }
 
 void Window::GetSysInfo()

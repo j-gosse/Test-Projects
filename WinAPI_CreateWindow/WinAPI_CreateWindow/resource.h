@@ -32,15 +32,15 @@ ID Range		Description
 
 // static resource IDs
 #define IDR_MAINFRAME		100
-#define IDR_ACCELERATOR		102
+#define IDR_ACCELERATOR		101
 
-#define IDS_WINDOW_TITLE	103
-#define IDS_WINDOW_CLASS	104
+#define IDS_WINDOW_TITLE	102
+#define IDS_WINDOW_CLASS	103
 
-#define IDD_ABOUTBOX		105
+#define IDD_ABOUTBOX		104
 
-#define IDI_PRIMARY			106
-#define IDI_SMALL			107
+#define IDI_PRIMARY			105
+#define IDI_SMALL			106
 
 // dialog control IDs
 
@@ -48,8 +48,8 @@ ID Range		Description
 // command IDs
 #define IDM_ABOUT			32768
 #define IDM_EXIT			32769
-#define ID_EDIT_OUTPUT		32770
-#define ID_EDIT_INPUT		32771
+#define ID_CONSOLE_OUTPUT	32770
+#define ID_CONSOLE_INPUT	32771
 #define ID_BUTTON_SEND		32772
 
 // default static control ID
