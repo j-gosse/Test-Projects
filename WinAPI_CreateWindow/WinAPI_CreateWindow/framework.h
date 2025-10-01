@@ -12,8 +12,8 @@
 // Windows Headers
 #include <windows.h>
 #include <io.h>
-#include <conio.h>	// _getch()
-#include <lmcons.h>	// UNLEN and MAX_COMPUTERNAME_LENGTH
+#include <conio.h>			// _getch()
+#include <lmcons.h>			// UNLEN and MAX_COMPUTERNAME_LENGTH
 
 // C RunTime Headers
 #include <stdlib.h>

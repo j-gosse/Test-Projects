@@ -31,19 +31,19 @@ private:
 
 	/**
 	* @brief	Handle messages sent to the window on a switch-case basis.
-	* @param	UINT uMsg : The message identifier. This parameter specifies which message is being sent to the window (e.g. WM_CREATE, WM_PAINT, WM_COMMAND).
-	* @param	WPARAM wParam : Provides additional message-specific information. Indicates whether the window was minimized, maximized, or resized.
-	* @param	LPARAM lParam : Provides additional message-specific information. Contains the new width and height of the window.
+	* @param	UINT uMsg		: The message identifier. This parameter specifies which message is being sent to the window.
+	* @param	WPARAM wParam	: Provides additional message-specific information. Indicates whether the window was minimized, maximized, or resized.
+	* @param	LPARAM lParam	: Provides additional message-specific information. Contains the new width and height of the window.
 	* @return	DefWindowProcW(m_hWindow, uMsg, wParam, lParam) when default switch case or return 0 when switch case
 	*/
 	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	/**
 	* @brief	Callback function to process event messages sent to the window.
-	* @param	HWND hWnd : A handle to the window that is receiving messages.
-	* @param	UINT uMsg : The message identifier. This parameter specifies which message is being sent to the window (e.g. WM_CREATE, WM_PAINT, WM_COMMAND).
-	* @param	WPARAM wParam : Provides additional message-specific information. Indicates whether the window was minimized, maximized, or resized.
-	* @param	LPARAM lParam : Provides additional message-specific information. Contains the new width and height of the window.
+	* @param	HWND hWnd		: A handle to the window that is receiving messages.
+	* @param	UINT uMsg		: The message identifier. This parameter specifies which message is being sent to the window.
+	* @param	WPARAM wParam	: Provides additional message-specific information. Indicates whether the window was minimized, maximized, or resized.
+	* @param	LPARAM lParam	: Provides additional message-specific information. Contains the new width and height of the window.
 	* @return	DefWindowProcW(hWnd, uMsg, wParam, lParam)
 	*/
 	static LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -55,24 +55,66 @@ private:
 	ATOM RegisterWindowClass();
 
 	/**
+	* @brief	Create the main window.
+	* @param	HINSTANCE hInstance : A handle to the window instance module.
+	* @param	int windowWidth		: The width of the main window.
+	* @param	int windowHeight	: The height of the main window.
+	* @param	DWORD dwExStyle		: Extended window styles specifier.
+	* @return	HWND hWnd
+	*/
+	HWND BuildWindow(HINSTANCE hInstance, int windowWidth, int windowHeight, DWORD dwExStyle);
+
+	/**
+	* @brief	Register a window to receive raw input from the keyboard.
+	* @param	HWND hWnd : A handle to the window that is receiving messages.
+	*/
+	void RegisterRawInput(HWND hWnd);
+
+	/**
+	* @brief	Reposition a window based on the leftX, topY and window width, window height.
+	* @param	HWND hWnd		 : A handle to the window that is receiving messages.
+	* @param	int leftX		 : The left position of the window.
+	* @param	int topY		 : The top position of the window.
+	* @param	int windowWidth	 : Width of the window.
+	* @param	int windowHeight : Height of the window.
+	*/
+	void RepositionWindow(HWND hWnd, int leftX, int topY, int windowWidth, int windowHeight);
+
+	/**
+	* @brief	Initialize/Customize window properties and create the window.
+	*/
+	void InitWindow();
+
+	/**
+	* @brief	Callback function to generate the About dialog box.
+	* @param	HWND hDlg		: A handle to the window dialog box that is receiving the message.
+	* @param	UINT uMsg		: The message identifier. This parameter specifies which message is being sent to the window (e.g. WM_CREATE, WM_PAINT, WM_COMMAND).
+	* @param	WPARAM wParam	: Provides additional message-specific information.
+	* @param	LPARAM lParam	: Provides additional message-specific information.
+	* @return	(INT_PTR)TRUE when switch case or (INT_PTR)FALSE when no switch case
+	*/
+	static INT_PTR CALLBACK About(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+	/**
 	* @brief	Retrieve username, computer name, processor architecture and CPU information.
 	*/
-	void GetSysInfo();
+	void SysInfo();
 
 	/**
 	* @brief	Retrieve logical processor count and relationships.
 	*/
-	void GetProcessorInfo();
+	void ProcessorInfo();
 
 	/**
-	* @brief	Callback function to generate the About message.
-	* @param	HWND hDlg : A handle to the window dialog box that is receiving the message.
-	* @param	UINT uMsg : The message identifier. This parameter specifies which message is being sent to the window (e.g. WM_CREATE, WM_PAINT, WM_COMMAND).
-	* @param	WPARAM wParam : Provides additional message-specific information.
-	* @param	LPARAM lParam : Provides additional message-specific information.
-	* @return	(INT_PTR)TRUE when switch case or (INT_PTR)FALSE when no switch case
+	* @brief	Destroy the window and unregister window class.
 	*/
-	static INT_PTR CALLBACK About(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	void Cleanup();
+
+	/**
+	* @brief	Log the last error that occurred to the console.
+	* @param	const wchar_t* desc : Description of where the error originated from.
+	*/
+	void LogLastError(const wchar_t* desc);
 
 public:
 	/**
@@ -88,13 +130,13 @@ public:
 
 	/**
 	* @brief	Copy constructor. (deleted)
-	* @param	Window& : constant lvalue reference
+	* @param	const Window& : constant lvalue reference
 	*/
 	Window(const Window&) = delete;
 
 	/**
 	* @brief	Copy assignment operator. (deleted)
-	* @param	Window& : constant lvalue reference
+	* @param	const Window& : constant lvalue reference
 	*/
 	Window& operator=(const Window&) = delete;
 
@@ -116,26 +158,10 @@ public:
 	virtual ~Window();
 
 	/**
-	* @brief	Customize window properties and create the window.
-	*/
-	void InitWindow();
-
-	/**
 	* @brief	Process queued messages sent to the window.
 	* @return	(int)msg.wParam
 	*/
 	BOOL ProcessMessages() const;
-
-	/**
-	* @brief	Destroy the window and unregister window class.
-	*/
-	void Cleanup();
-
-	/**
-	* @brief	Log the last error that occurred to the console.
-	* @param	const wchar_t* desc : Description of where the error originated from.
-	*/
-	void LogLastError(const wchar_t* desc);
 
 	/**
 	* @brief	Get the window handle.

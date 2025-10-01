@@ -31,7 +31,7 @@ ID Range		Description
 #define RESOURCE_H_
 
 // static resource IDs
-#define IDR_MAINFRAME		100
+#define IDR_MAIN_MENU		100
 #define IDR_ACCELERATOR		101
 
 #define IDS_WINDOW_TITLE	102
@@ -68,4 +68,4 @@ ID Range		Description
 #endif
 #endif
 
-#endif
+#endif // end of #ifndef RESOURCE_H_

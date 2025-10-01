@@ -1,5 +1,5 @@
 /*! \file       WinAPI_CreateWindow
-    \version    2.0
+    \version    2.1
     \desc	    Windows application for testing the creation of a window through use of the Windows (Win32) API.
     \author     Jacob Gosse
     \date       September 1, 2025
@@ -31,6 +31,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
         // allocate console
         if (AllocConsole())
         {
+            // redirect console output
+            FILE* pCout = nullptr;
+            FILE* pCin = nullptr;
+            FILE* pCerr = nullptr;
+            freopen_s(&pCout, "CONOUT$", "w", stdout);  // Redirect stdout
+            freopen_s(&pCin, "CONIN$", "r", stdin);     // Redirect stdin
+            freopen_s(&pCerr, "CONOUT$", "w", stderr);  // Redirect stderr
+
             std::wcout << L"Console successfully allocated." << L'\n';
         }
         else
@@ -38,20 +46,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
             throw std::runtime_error("Failed to allocate a console!");
         }
 
-        // redirect console output
-        FILE* pCout = nullptr;
-        FILE* pCin = nullptr;
-        FILE* pCerr = nullptr;
-        freopen_s(&pCout, "CONOUT$", "w", stdout);  // Redirect stdout
-        freopen_s(&pCin, "CONIN$", "r", stdin);     // Redirect stdin
-        freopen_s(&pCerr, "CONOUT$", "w", stderr);  // Redirect stderr
-
-        // enable CRT memory leak checking
         #if defined(_DEBUG) && defined(_WIN32)
         {
-            std::wcout << L"_DEBUG is defined.\n";
-            std::wcout << L"_WIN32 is defined.\n";
-
+            // enable CRT memory leak checking
             int dbgFlags = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
             dbgFlags |= _CRTDBG_CHECK_ALWAYS_DF;
             dbgFlags |= _CRTDBG_DELAY_FREE_MEM_DF;
@@ -69,10 +66,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
         ULONGLONG currentTime;
         ULONGLONG elapsedTime;
 
-        // initialize main window
+        // construct window
         std::unique_ptr<Window, std::default_delete<Window>> window = std::make_unique<Window>(hInstance);
-        window->InitWindow();
 
+        // main loop
         while (window->ProcessMessages())
         {
             currentTime = GetTickCount64();
