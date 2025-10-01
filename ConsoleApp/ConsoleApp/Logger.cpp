@@ -24,9 +24,26 @@ Logger::~Logger()
 
 std::wstring Logger::CurrentDate()
 {
-    auto now = std::chrono::floor<std::chrono::seconds>(std::chrono::system_clock::now());
-    auto time = std::chrono::current_zone()->to_local(now);
-    return std::format(L"{:%y-%m-%d %H:%M:%S}", time);
+    /*
+    std::chrono::current_zone() is C++20's time zone support, which is part of the <chrono> library
+    using current_zone() will load IANA time zone database strings which aren't explicitly cleaned
+    upon a program's exit
+    */
+    //auto now = std::chrono::floor<std::chrono::seconds>(std::chrono::system_clock::now());
+    //auto time = std::chrono::current_zone()->to_local(now);
+    //return std::format(L"{:%y-%m-%d %H:%M:%S}", time);
+
+    std::chrono::time_point<std::chrono::system_clock, std::chrono::system_clock::duration> now =
+        std::chrono::floor<std::chrono::seconds>(std::chrono::system_clock::now());
+
+    std::time_t time = std::chrono::system_clock::to_time_t(now);
+    std::tm localTime;
+    localtime_s(&localTime, &time);  // Thread-safe on Windows
+
+    wchar_t buffer[100];
+    std::wcsftime(buffer, sizeof(buffer) / sizeof(wchar_t), L"%y-%m-%d %H:%M:%S", &localTime);
+
+    return std::wstring(buffer);
 }
 
 void Logger::Log(HWND hConsoleWindow, const std::wstring& text)

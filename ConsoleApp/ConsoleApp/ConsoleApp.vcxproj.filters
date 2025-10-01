@@ -13,42 +13,48 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Window">
-      <UniqueIdentifier>{6bc4b173-e603-403a-941b-d42ec96fd6e6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\icons">
       <UniqueIdentifier>{5fd9df3a-c606-453a-931a-f7ee7bc6fc09}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Console">
       <UniqueIdentifier>{66245437-c488-45f1-bccc-3cb248e37a65}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\win32">
+      <UniqueIdentifier>{44e3e821-3abb-4f7a-9761-de21e3097d30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\win32">
+      <UniqueIdentifier>{6bc4b173-e603-403a-941b-d42ec96fd6e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Console">
+      <UniqueIdentifier>{23a550bd-cf0f-49db-9371-3326a2710352}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="win32_platform.cpp">
+      <Filter>Source Files\win32</Filter>
     </ClCompile>
     <ClCompile Include="Window.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\win32</Filter>
     </ClCompile>
     <ClCompile Include="Console.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Console</Filter>
     </ClCompile>
     <ClCompile Include="Logger.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Console</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
-      <Filter>Header Files\Window</Filter>
+      <Filter>Header Files\win32</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Header Files\Window</Filter>
+      <Filter>Header Files\win32</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
-      <Filter>Header Files\Window</Filter>
+      <Filter>Header Files\win32</Filter>
     </ClInclude>
     <ClInclude Include="Window.hpp">
-      <Filter>Header Files\Window</Filter>
+      <Filter>Header Files\win32</Filter>
     </ClInclude>
     <ClInclude Include="Console.hpp">
       <Filter>Header Files\Console</Filter>

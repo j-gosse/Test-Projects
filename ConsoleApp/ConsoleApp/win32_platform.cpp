@@ -1,5 +1,5 @@
 /*! \file       ConsoleApp
-    \version    1.4
+    \version    1.5
     \desc	    Windows desktop application that emulates a console for output and creates an input bar for user input.
     \author     Jacob Gosse
     \date       September 6, 2025
@@ -28,31 +28,48 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 {
     try
     {
+        // allocate console
         if (AllocConsole())
         {
-            // Console successfully allocated
+            // redirect console output
+            FILE* pCout = nullptr;
+            FILE* pCin = nullptr;
+            FILE* pCerr = nullptr;
+            freopen_s(&pCout, "CONOUT$", "w", stdout);  // Redirect stdout
+            freopen_s(&pCin, "CONIN$", "r", stdin);     // Redirect stdin
+            freopen_s(&pCerr, "CONOUT$", "w", stderr);  // Redirect stderr
+
             std::wcout << L"Console successfully allocated." << L'\n';
         }
         else
         {
-            // Error allocating console
-            throw std::runtime_error("Error allocating console!");
+            throw std::runtime_error("Failed to allocate a console!");
         }
 
-        FILE* pCout = nullptr;
-        FILE* pCin = nullptr;
-        FILE* pCerr = nullptr;
-        freopen_s(&pCout, "CONOUT$", "w", stdout);  // Redirect stdout
-        freopen_s(&pCin, "CONIN$", "r", stdin);     // Redirect stdin
-        freopen_s(&pCerr, "CONOUT$", "w", stderr);  // Redirect stderr
+        #if defined(_DEBUG) && defined(_WIN32)
+        {
+            // enable CRT memory leak checking
+            int dbgFlags = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
+            dbgFlags |= _CRTDBG_CHECK_ALWAYS_DF;
+            dbgFlags |= _CRTDBG_DELAY_FREE_MEM_DF;
+            dbgFlags |= _CRTDBG_LEAK_CHECK_DF;
+            _CrtSetDbgFlag(dbgFlags);
 
+            // redirect leak warnings to console and debug window
+            _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG | _CRTDBG_MODE_FILE);
+            _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);
+        }
+        #endif
+
+        // declare time values
         ULONGLONG startTime = GetTickCount64();
         ULONGLONG currentTime;
         ULONGLONG elapsedTime;
 
+        // construct window
         std::unique_ptr<Window, std::default_delete<Window>> window = std::make_unique<Window>(hInstance);
-        window->InitWindow();
 
+        // main loop
         while (window->ProcessMessages())
         {
             currentTime = GetTickCount64();
@@ -68,14 +85,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
             Sleep(16);  // simulate ~60 FPS
         }
 
+        // destroy window
         window.reset();
         window = nullptr;
 
-        std::cout << "Program finished. Press any key to continue..." << std::endl;
-        _getch(); // Waits for a single character input
+        // dump memory leaks if any occurred
+        std::wcout << L'\n';
+        if (!_CrtDumpMemoryLeaks())
+        {
+            std::wcout << L"No memory leaks detected." << std::endl;
+        }
 
-        // memory leak checking code
-        //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+        std::cout << "\nProgram finished. Press any key to continue..." << std::endl;
+        _getch(); // Waits for a single character input
 
         return 0;
     }

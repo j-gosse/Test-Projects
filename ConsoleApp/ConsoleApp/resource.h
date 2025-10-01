@@ -31,16 +31,16 @@ ID Range		Description
 #define RESOURCE_H_
 
 // static resource IDs
-#define IDR_MAINFRAME		100
-#define IDR_ACCELERATOR		102
+#define IDR_MAIN_MENU		100
+#define IDR_ACCELERATOR		101
 
-#define IDS_WINDOW_TITLE	103
-#define IDS_WINDOW_CLASS	104
+#define IDS_WINDOW_TITLE	102
+#define IDS_WINDOW_CLASS	103
 
-#define IDD_ABOUTBOX		105
+#define IDD_ABOUTBOX		104
 
-#define IDI_PRIMARY			106
-#define IDI_SMALL			107
+#define IDI_PRIMARY			105
+#define IDI_SMALL			106
 
 // dialog control IDs
 
@@ -68,4 +68,4 @@ ID Range		Description
 #endif
 #endif
 
-#endif
+#endif // end of #ifndef RESOURCE_H_

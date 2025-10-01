@@ -129,7 +129,7 @@
   <ItemGroup>
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="Logger.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="win32_platform.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>

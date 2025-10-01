@@ -204,7 +204,7 @@ void Console::SendInput() const
 	LOG_SEND(m_hInputWindow, m_hConsoleWindow);
 }
 
-void Console::ResizeWindows(WPARAM wParam, LPARAM lParam)
+void Console::ResizeWindow(WPARAM wParam, LPARAM lParam)
 {
 	m_parentWindowWidth = LOWORD(lParam);
 	m_parentWindowHeight = HIWORD(lParam);

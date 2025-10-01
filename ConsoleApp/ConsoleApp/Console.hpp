@@ -29,7 +29,7 @@ public:
 	virtual ~Console();
 
 	void SendInput() const;
-	void ResizeWindows(WPARAM wParam, LPARAM lParam);
+	void ResizeWindow(WPARAM wParam, LPARAM lParam);
 	void SetConsoleColor() const;
 	void SetInputColor() const;
 	void Cleanup();
