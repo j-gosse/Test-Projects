@@ -146,10 +146,10 @@ Console::~Console()
 LRESULT CALLBACK Console::ConsoleProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData)
 {
 	Console* pThis = reinterpret_cast<Console*>(dwRefData);
-	return pThis->HandleConsoleMessages(hWnd, uMsg, wParam, lParam);
+	return pThis->HandleConsoleMessage(hWnd, uMsg, wParam, lParam);
 }
 
-LRESULT Console::HandleConsoleMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const
+LRESULT Console::HandleConsoleMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const
 {
 	switch (uMsg)
 	{
@@ -161,10 +161,10 @@ LRESULT Console::HandleConsoleMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 LRESULT CALLBACK Console::InputProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData)
 {
 	Console* pThis = reinterpret_cast<Console*>(dwRefData);
-	return pThis->HandleInputMessages(hWnd, uMsg, wParam, lParam);
+	return pThis->HandleInputMessage(hWnd, uMsg, wParam, lParam);
 }
 
-LRESULT Console::HandleInputMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const
+LRESULT Console::HandleInputMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const
 {
 	switch (uMsg)
 	{

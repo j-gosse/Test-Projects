@@ -19,9 +19,9 @@ private:
 	LONG m_parentWindowHeight;
 
 	static LRESULT CALLBACK ConsoleProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
-	LRESULT HandleConsoleMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
+	LRESULT HandleConsoleMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 	static LRESULT CALLBACK InputProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
-	LRESULT HandleInputMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
+	LRESULT HandleInputMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 
 public:
 	Console(LONG parentWindowWidth, LONG parentWindowHeight);

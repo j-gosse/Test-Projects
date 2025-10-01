@@ -26,8 +26,8 @@ std::wstring Logger::CurrentDate()
 {
     /*
     std::chrono::current_zone() is C++20's time zone support, which is part of the <chrono> library
-    using current_zone() will load IANA time zone database strings which aren't explicitly cleaned
-    upon a program's exit
+    using current_zone() will load IANA time zone database strings which will slow down initial loading 
+    of a program and are not explicitly cleaned upon a program's exit
     */
     //auto now = std::chrono::floor<std::chrono::seconds>(std::chrono::system_clock::now());
     //auto time = std::chrono::current_zone()->to_local(now);
