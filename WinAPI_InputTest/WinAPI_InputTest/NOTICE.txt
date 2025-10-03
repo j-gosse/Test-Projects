@@ -1,6 +1,6 @@
-\file       WinAPI_InpuTest
-\version    1.0
-\desc	    Windows desktop application for testing the handling of keyboard input through use of the Windows (Win32) API.
+\file       WinAPI_InputTest
+\version    1.1
+\desc	    Windows desktop application for testing the handling of keyboard input through use of the Windows API.
 \author     Jacob Gosse
 \date       October 3, 2025
 

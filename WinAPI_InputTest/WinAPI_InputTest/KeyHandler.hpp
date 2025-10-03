@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #ifndef KEYHANDLER_HPP_
 #define KEYHANDLER_HPP_
@@ -31,12 +31,7 @@ private:
     bool m_changed = false;
 
     ButtonState m_buttonState[BUTTON_COUNT];
-
-public:
-    KeyHandler();
-    virtual ~KeyHandler();
-
-    std::vector<unsigned int> buttonBindings[BUTTON_COUNT] =
+    std::vector<unsigned int> m_buttonBindings[BUTTON_COUNT] =
     {
         { 'W', VK_UP },      // BUTTON_UP
         { 'S', VK_DOWN },    // BUTTON_DOWN
@@ -45,9 +40,19 @@ public:
         { VK_SPACE }         // BUTTON_ACTION
     };
 
+    std::wstring m_displayText;
+
     void UpdateKey(bool isDown);
     void UpdateButton(Button button);
     void PrintButtons() const;
+
+public:
+    KeyHandler();
+    virtual ~KeyHandler();
+
+    void Update(unsigned int vkCode, bool isDown);
+    void UpdateDisplayText(HWND hWnd);
+    void PaintKeys(HWND hWnd);
 
     const bool IsKeyDown() const { return m_isDown; }
     const bool IsKeyChanged() const { return m_changed; }

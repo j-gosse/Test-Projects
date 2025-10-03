@@ -1,6 +1,6 @@
-﻿/*! \file       WinAPI_InpuTest
-    \version    1.0
-    \desc	    Windows desktop application for testing the handling of keyboard input through use of the Windows (Win32) API.
+﻿/*! \file       WinAPI_InputTest
+    \version    1.1
+    \desc	    Windows desktop application for testing the handling of keyboard input through use of the Windows API.
     \author     Jacob Gosse
     \date       October 3, 2025
 
@@ -20,6 +20,18 @@
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+
+    \note
+    Keyboard Ghosting
+    -----------------
+    Keyboard ghosting is when a keyboard fails to register multiple simultaneous key presses because
+    its internal electronics are unable to keep up with the number of inputs, often ignoring some key
+    down/up events. This is known as N-Key Rollover, referring to the number of keys that can be pressed 
+    simultaneously on a keyboard, and thus a low quality keyboard will be more prone to ghosting keys. 
+    This can have an impact on overall testing of keyboard input, and should be kept in mind that some 
+    issues with the handling of input may be related to the hardware itself rather than the program code.
+
+    Keyboard Testing: https://keyboardchecker.com/
 */
 
 #include "Window.hpp"
@@ -31,7 +43,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
         // allocate console
         if (AllocConsole())
         {
-            // redirect console output
+            // redirect console input/output
             FILE* pCout = nullptr;
             FILE* pCin = nullptr;
             FILE* pCerr = nullptr;

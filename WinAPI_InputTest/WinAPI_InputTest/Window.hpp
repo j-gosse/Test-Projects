@@ -91,7 +91,7 @@ private:
 	/**
 	* @brief	Callback function to generate the About dialog box.
 	* @param	HWND hDlg		: A handle to the window dialog box that is receiving the message.
-	* @param	UINT uMsg		: The message identifier. This parameter specifies which message is being sent to the window (e.g. WM_CREATE, WM_PAINT, WM_COMMAND).
+	* @param	UINT uMsg		: The message identifier. This parameter specifies which message is being sent to the window.
 	* @param	WPARAM wParam	: Provides additional message-specific information.
 	* @param	LPARAM lParam	: Provides additional message-specific information.
 	* @return	(INT_PTR)TRUE when switch case or (INT_PTR)FALSE when no switch case

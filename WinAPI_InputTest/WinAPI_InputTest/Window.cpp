@@ -88,30 +88,19 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
+	case WM_PAINT:
+	{
+		m_keyHandler.PaintKeys(m_hWindow);
+		return 0;
+	}
 	case WM_KEYUP:
 	case WM_KEYDOWN:
 	{
 		unsigned int vkCode = static_cast<unsigned int>(wParam);
 		bool isDown = ((lParam & (1LL << 31)) == 0);
 		//bool isDown = (uMsg == WM_KEYDOWN);
-		for (int i = 0; i < BUTTON_COUNT; i++)
-		{
-			for (unsigned int key : m_keyHandler.buttonBindings[i])
-			{
-				if (key == vkCode)
-				{
-					m_keyHandler.UpdateKey(isDown);
-					m_keyHandler.UpdateButton(static_cast<Button>(i));
-					m_keyHandler.PrintButtons();
-					//std::wcout << L"vkCode: " << vkCode << L'\n';
-					//std::wcout << L"isKeyDown: " << m_keyHandler.IsKeyDown() << L'\n';
-					//std::wcout << L"isKeyChanged: " << m_keyHandler.IsKeyChanged() << L'\n';
-					//std::wcout << L"isButtonDown: " << m_keyHandler.IsButtonDown(BUTTON_UP) << L'\n';
-					//std::wcout << L"isButtonChanged: " << m_keyHandler.IsButtonChanged(BUTTON_UP) << L'\n';
-					break;
-				}
-			}
-		}
+		m_keyHandler.Update(vkCode, isDown);
+		m_keyHandler.UpdateDisplayText(m_hWindow);
 	} return 0;
 	case WM_CHAR:
 		return 0;
@@ -123,7 +112,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_CLOSE:
 		std::wcout << L"CASE: WM_CLOSE" << L'\n';
-		if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"WinAPI_CreateWindow", MB_OKCANCEL) == IDOK)
+		if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"WinAPI_InputTest", MB_OKCANCEL) == IDOK)
 		{
 			Window::Cleanup();
 		}
@@ -138,7 +127,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			return 0;
 		case IDM_EXIT:
 			std::wcout << L"CASE: IDM_EXIT" << L'\n';
-			if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"WinAPI_CreateWindow", MB_OKCANCEL) == IDOK)
+			if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"WinAPI_InputTest", MB_OKCANCEL) == IDOK)
 			{
 				Window::Cleanup();
 			}
