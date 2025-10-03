@@ -1,5 +1,5 @@
 ﻿/*! \file       WinAPI_InputTest
-    \version    1.1
+    \version    1.2
     \desc	    Windows desktop application for testing the handling of keyboard input through use of the Windows API.
     \author     Jacob Gosse
     \date       October 3, 2025
@@ -26,10 +26,11 @@
     -----------------
     Keyboard ghosting is when a keyboard fails to register multiple simultaneous key presses because
     its internal electronics are unable to keep up with the number of inputs, often ignoring some key
-    down/up events. This is known as N-Key Rollover, referring to the number of keys that can be pressed 
-    simultaneously on a keyboard, and thus a low quality keyboard will be more prone to ghosting keys. 
-    This can have an impact on overall testing of keyboard input, and should be kept in mind that some 
-    issues with the handling of input may be related to the hardware itself rather than the program code.
+    down/up events. A keyboard's capability for this is known as N-Key Rollover, referring to the number 
+    of keys that can be pressed simultaneously on a keyboard and still be correctly registered. Thus a 
+    low quality keyboard will be more prone to ghosting keys. This can have an impact on overall testing
+    of keyboard input, and it should be kept in mind that some issues with the handling of input may be 
+    related to the input hardware itself rather than the program code.
 
     Keyboard Testing: https://keyboardchecker.com/
 */

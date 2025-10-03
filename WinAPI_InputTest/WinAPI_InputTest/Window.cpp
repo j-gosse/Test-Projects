@@ -90,17 +90,15 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_PAINT:
 	{
-		m_keyHandler.PaintKeys(m_hWindow);
+		m_keyHandler.DrawKeys(m_hWindow);
 		return 0;
 	}
 	case WM_KEYUP:
 	case WM_KEYDOWN:
 	{
 		unsigned int vkCode = static_cast<unsigned int>(wParam);
-		bool isDown = ((lParam & (1LL << 31)) == 0);
-		//bool isDown = (uMsg == WM_KEYDOWN);
-		m_keyHandler.Update(vkCode, isDown);
-		m_keyHandler.UpdateDisplayText(m_hWindow);
+		bool isDown = ((lParam & (1LL << 31)) == 0); //bool isDown = (uMsg == WM_KEYDOWN);
+		m_keyHandler.Update(m_hWindow, vkCode, isDown);
 	} return 0;
 	case WM_CHAR:
 		return 0;
@@ -133,6 +131,11 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			}
 			return 0;
 		}
+		return 0;
+	case WM_KILLFOCUS:
+		std::wcout << L"CASE: WM_KILLFOCUS" << L'\n';
+		m_keyHandler.ResetKeyState();
+		InvalidateRect(m_hWindow, nullptr, TRUE); // redraw window
 		return 0;
 	case WM_DESTROY:
 		std::wcout << L"CASE: WM_DESTROY" << L'\n';

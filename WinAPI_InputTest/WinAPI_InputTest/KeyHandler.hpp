@@ -30,6 +30,9 @@ private:
     bool m_isDown = false;
     bool m_changed = false;
 
+    static constexpr const size_t NUM_KEYS = 256;
+    std::bitset<NUM_KEYS> m_keyState{};
+
     ButtonState m_buttonState[BUTTON_COUNT];
     std::vector<unsigned int> m_buttonBindings[BUTTON_COUNT] =
     {
@@ -43,19 +46,22 @@ private:
     std::wstring m_displayText;
 
     void UpdateKey(bool isDown);
-    void UpdateButton(Button button);
-    void PrintButtons() const;
+    void UpdateKeyState(unsigned int vkCode);
+    void UpdateButtonState(Button button);
+    void UpdateDisplayText(HWND hWnd);
+
+    void PrintKeyState() const;
+    void PrintButtonState() const;
 
 public:
     KeyHandler();
     virtual ~KeyHandler();
 
-    void Update(unsigned int vkCode, bool isDown);
-    void UpdateDisplayText(HWND hWnd);
-    void PaintKeys(HWND hWnd);
+    void Update(HWND hWnd, unsigned int vkCode, bool isDown);
+    void DrawKeys(HWND hWnd);
+    void ResetKeyState();
 
-    const bool IsKeyDown() const { return m_isDown; }
-    const bool IsKeyChanged() const { return m_changed; }
+    const bool IsKeyDown(unsigned int vkCode) const { return m_keyState[vkCode]; }
     const bool IsButtonDown(Button button) const { return m_buttonState[button].isDown; }
     const bool IsButtonChanged(Button button) const { return m_buttonState[button].changed; }
 };
