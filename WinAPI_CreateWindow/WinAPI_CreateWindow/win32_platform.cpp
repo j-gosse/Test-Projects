@@ -1,5 +1,5 @@
 /*! \file       WinAPI_CreateWindow
-    \version    2.1
+    \version    2.2
     \desc	    Windows application for testing the creation of a window through use of the Windows (Win32) API.
     \author     Jacob Gosse
     \date       September 1, 2025
@@ -31,14 +31,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
         // allocate console
         if (AllocConsole())
         {
-            // redirect console output
-            FILE* pCout = nullptr;
-            FILE* pCin = nullptr;
-            FILE* pCerr = nullptr;
-            freopen_s(&pCout, "CONOUT$", "w", stdout);  // Redirect stdout
-            freopen_s(&pCin, "CONIN$", "r", stdin);     // Redirect stdin
-            freopen_s(&pCerr, "CONOUT$", "w", stderr);  // Redirect stderr
-
+            // redirect console input/output
+            FILE* dummyStream = nullptr;
+            freopen_s(&dummyStream, "CONOUT$", "w", stdout);    // Redirect stdout
+            freopen_s(&dummyStream, "CONIN$", "r", stdin);      // Redirect stdin
+            freopen_s(&dummyStream, "CONOUT$", "w", stderr);    // Redirect stderr
             std::wcout << L"Console successfully allocated." << L'\n';
         }
         else
@@ -61,19 +58,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
         }
         #endif
 
-        // declare time values
-        ULONGLONG startTime = GetTickCount64();
-        ULONGLONG currentTime;
-        ULONGLONG elapsedTime;
-
         // construct window
         std::unique_ptr<Window, std::default_delete<Window>> window = std::make_unique<Window>(hInstance);
 
         // main loop
-        while (window->ProcessMessages())
+        UINT wMsgFilterMin = 0;
+        UINT wMsgFilterMax = 0;
+        while (window->ProcessMessages(wMsgFilterMin, wMsgFilterMax))
         {
-            currentTime = GetTickCount64();
-            elapsedTime = currentTime - startTime;
+            //std::wcout << window->GetElapsed() << L'\n';
 
             /*
             This is where the main loop logic or call to a update/render loop occurs.
@@ -96,7 +89,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
             std::wcout << L"No memory leaks detected." << std::endl;
         }
 
-        std::cout << "\nProgram finished. Press any key to continue..." << std::endl;
+        std::wcout << L"\nProgram finished. Press any key to continue..." << std::endl;
         _getch(); // Waits for a single character input
 
         return 0;

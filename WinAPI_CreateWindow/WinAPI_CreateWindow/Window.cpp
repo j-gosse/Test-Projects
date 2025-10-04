@@ -37,13 +37,10 @@ Window::~Window()
 
 /* FUNCTION DEFINITIONS */
 
-BOOL Window::ProcessMessages() const
+BOOL Window::ProcessMessages(UINT wMsgFilterMin, UINT wMsgFilterMax) const
 {
 	MSG msg = {};
-	UINT msgFilterMin = 0;
-	UINT msgFilterMax = 0;
-
-	while (PeekMessageW(&msg, nullptr, msgFilterMin, msgFilterMax, PM_REMOVE))
+	while (PeekMessageW(&msg, nullptr, wMsgFilterMin, wMsgFilterMax, PM_REMOVE))
 	{
 		if (msg.message == WM_QUIT) return FALSE;
 
@@ -61,13 +58,10 @@ BOOL Window::ProcessMessages() const
 	return TRUE;
 }
 /*
-BOOL Window::ProcessMessages() const
+BOOL Window::ProcessMessages(UINT wMsgFilterMin, UINT wMsgFilterMax) const
 {
 	MSG msg = {};
-	UINT msgFilterMin = 0;
-	UINT msgFilterMax = 0;
-
-	while (GetMessageW(&msg, nullptr, msgFilterMin, msgFilterMax))
+	while (GetMessageW(&msg, nullptr, wMsgFilterMin, wMsgFilterMax))
 	{
 		if (m_hAccelTable && !TranslateAcceleratorW(msg.hwnd, m_hAccelTable, &msg))
 		{
@@ -88,10 +82,16 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_KEYDOWN:
-		return 0;
 	case WM_KEYUP:
+	case WM_KEYDOWN:
+	{
+		unsigned int vkCode = static_cast<unsigned int>(wParam);
+		bool isDown = ((lParam & (1LL << 31)) == 0);
+		std::wstring key = isDown ? L"Down" : L"Up";
+		std::wcout << key << L": " << vkCode << L'\n';
+		//bool isDown = (uMsg == WM_KEYDOWN);
 		return 0;
+	}
 	case WM_CHAR:
 		return 0;
 	case WM_SIZE:
@@ -102,7 +102,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_CLOSE:
 		std::wcout << L"CASE: WM_CLOSE" << L'\n';
-		if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"WinAPI_CreateWindow", MB_OKCANCEL) == IDOK)
+		if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"Windows App", MB_OKCANCEL) == IDOK)
 		{
 			Window::Cleanup();
 		}
@@ -117,12 +117,18 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			return 0;
 		case IDM_EXIT:
 			std::wcout << L"CASE: IDM_EXIT" << L'\n';
-			if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"WinAPI_CreateWindow", MB_OKCANCEL) == IDOK)
+			if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"Windows App", MB_OKCANCEL) == IDOK)
 			{
 				Window::Cleanup();
 			}
 			return 0;
 		}
+		return 0;
+	case WM_SETFOCUS:
+		std::wcout << L"CASE: WM_SETFOCUS" << L'\n';
+		return 0;
+	case WM_KILLFOCUS:
+		std::wcout << L"CASE: WM_KILLFOCUS" << L'\n';
 		return 0;
 	case WM_DESTROY:
 		std::wcout << L"CASE: WM_DESTROY" << L'\n';
@@ -240,6 +246,31 @@ void Window::RepositionWindow(HWND hWnd, int leftX, int topY, int windowWidth, i
 
 void Window::InitWindow()
 {
+	// elapsed time
+	Window::Elapsed();
+
+	// system information
+	Window::SysInfo();
+	//Window::ProcessorInfo();
+
+	// load accelerator
+	m_hAccelTable = LoadAcceleratorsW(m_hInstance, MAKEINTRESOURCE(IDR_ACCELERATOR));
+
+	// register window class
+	LoadStringW(m_hInstance, IDS_WINDOW_TITLE, m_windowName, MAX_LOADSTRING);
+	LoadStringW(m_hInstance, IDS_WINDOW_CLASS, m_windowClassName, MAX_LOADSTRING);
+	Window::RegisterWindowClass();
+
+	// nCmdShow controls how the window is to be shown
+	// parameter is ignored the first time an application calls show window if STARTUPINFO structure specified
+	ZeroMemory(&m_startupInfo, sizeof(m_startupInfo));
+	m_startupInfo.cb = sizeof(m_startupInfo);
+	ZeroMemory(&m_processInfo, sizeof(m_processInfo));
+	m_startupInfo.dwFlags = STARTF_USESHOWWINDOW;
+	m_startupInfo.wShowWindow = SW_SHOW;
+	int nCmdShow = (m_startupInfo.dwFlags & STARTF_USESHOWWINDOW) ? m_startupInfo.wShowWindow : SW_SHOWDEFAULT;
+
+	// properties for window creation
 	DWORD dwExStyle = 0;
 	LONG leftX = 0;
 	LONG topY = 0;
@@ -248,30 +279,18 @@ void Window::InitWindow()
 	int windowWidth = rect.right - rect.left;
 	int windowHeight = rect.bottom - rect.top;
 
-	Window::SysInfo();
-	//Window::ProcessorInfo();
-
-	m_hAccelTable = LoadAcceleratorsW(m_hInstance, MAKEINTRESOURCE(IDR_ACCELERATOR));
-
-	LoadStringW(m_hInstance, IDS_WINDOW_TITLE, m_windowName, MAX_LOADSTRING);
-	LoadStringW(m_hInstance, IDS_WINDOW_CLASS, m_windowClassName, MAX_LOADSTRING);
-	Window::RegisterWindowClass();
-
-	ZeroMemory(&m_startupInfo, sizeof(m_startupInfo));
-	m_startupInfo.cb = sizeof(m_startupInfo);
-	ZeroMemory(&m_processInfo, sizeof(m_processInfo));
-	m_startupInfo.dwFlags = STARTF_USESHOWWINDOW;
-	m_startupInfo.wShowWindow = SW_SHOW;
-	int nCmdShow = (m_startupInfo.dwFlags & STARTF_USESHOWWINDOW) ? m_startupInfo.wShowWindow : SW_SHOWDEFAULT;
-
+	// create window
 	m_hWindow = Window::BuildWindow(m_hInstance, windowWidth, windowHeight, dwExStyle);
 
+	// register window to receive raw input from keyboards
 	Window::RegisterRawInput(m_hWindow);
 
+	// center window position relative to screen resolution
 	int centerWidth = (m_desktopWidth - windowWidth) / 2;
 	int centerHeight = (m_desktopHeight - windowHeight) / 2;
 	Window::RepositionWindow(m_hWindow, centerWidth, centerHeight, windowWidth, windowHeight);
 
+	// show and update window
 	ShowWindow(m_hWindow, nCmdShow);
 	UpdateWindow(m_hWindow);
 }
@@ -293,6 +312,13 @@ INT_PTR CALLBACK Window::About(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 		break;
 	}
 	return (INT_PTR)FALSE;
+}
+
+ULONGLONG Window::Elapsed()
+{
+	m_currentTime = GetTickCount64();
+	m_elapsedTime = m_currentTime - m_startTime;
+	return m_elapsedTime;
 }
 
 void Window::SysInfo()

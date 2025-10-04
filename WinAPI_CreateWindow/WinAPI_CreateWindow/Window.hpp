@@ -29,6 +29,10 @@ private:
 	LONG m_desktopWidth = GetSystemMetrics(SM_CXSCREEN);
 	LONG m_desktopHeight = GetSystemMetrics(SM_CYSCREEN);
 
+	const ULONGLONG m_startTime = GetTickCount64();
+	ULONGLONG m_currentTime;
+	ULONGLONG m_elapsedTime;
+
 	/**
 	* @brief	Handle messages sent to the window on a switch-case basis.
 	* @param	UINT uMsg		: The message identifier. This parameter specifies which message is being sent to the window.
@@ -96,6 +100,12 @@ private:
 	static INT_PTR CALLBACK About(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	/**
+	* @brief	Returns the number of milliseconds elapsed since the initialization of the Window.
+	* @return	ULONGLONG m_elapsedTime
+	*/
+	ULONGLONG Elapsed();
+
+	/**
 	* @brief	Retrieve username, computer name, processor architecture and CPU information.
 	*/
 	void SysInfo();
@@ -158,16 +168,25 @@ public:
 	virtual ~Window();
 
 	/**
-	* @brief	Process queued messages sent to the window.
+	* @brief	Process queued messages sent to the window. If wMsgFilterMin and wMsgFilterMax are both zero,
+				PeekMessage returns all available messages (no range filtering is performed).
+	* @param	UINT wMsgFilterMin : The value of the first message in the range of messages to be examined.
+	* @param	UINT wMsgFilterMax : The value of the last message in the range of messages to be examined.
 	* @return	(int)msg.wParam
 	*/
-	BOOL ProcessMessages() const;
+	BOOL ProcessMessages(UINT wMsgFilterMin, UINT wMsgFilterMax) const;
 
 	/**
 	* @brief	Get the window handle.
 	* @return	HWND m_hWindow
 	*/
 	HWND GetWindow() const { return m_hWindow; }
+
+	/**
+	* @brief	Get the elapsed time in milliseconds.
+	* @return	ULONGLONG m_elapsedTime
+	*/
+	ULONGLONG GetElapsed() { return Elapsed(); }
 };
 
 #endif
