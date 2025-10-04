@@ -1,6 +1,6 @@
 /*! \file       WinAPI_CreateWindow
     \version    2.2
-    \desc	    Windows application for testing the creation of a window through use of the Windows (Win32) API.
+    \desc	    Windows application for testing the creation of a window through use of the Windows API.
     \author     Jacob Gosse
     \date       September 1, 2025
 
@@ -36,7 +36,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
             freopen_s(&dummyStream, "CONOUT$", "w", stdout);    // Redirect stdout
             freopen_s(&dummyStream, "CONIN$", "r", stdin);      // Redirect stdin
             freopen_s(&dummyStream, "CONOUT$", "w", stderr);    // Redirect stderr
-            std::wcout << L"Console successfully allocated." << L'\n';
         }
         else
         {

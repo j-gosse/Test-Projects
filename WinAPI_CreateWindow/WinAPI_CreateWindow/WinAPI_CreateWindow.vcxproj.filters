@@ -16,11 +16,11 @@
     <Filter Include="Resource Files\icons">
       <UniqueIdentifier>{a01c3c66-45d6-42da-8b3f-f213434c8ff5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\win32">
-      <UniqueIdentifier>{5fd6c065-ba3c-4852-b764-b48c2d24ffa5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\win32">
       <UniqueIdentifier>{785aaa66-6433-4105-aee7-3cd94dcaf6be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\win32">
+      <UniqueIdentifier>{5fd6c065-ba3c-4852-b764-b48c2d24ffa5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
