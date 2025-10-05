@@ -1,5 +1,5 @@
 /*! \file       WinAPI_CreateWindow
-    \version    2.2
+    \version    2.3
     \desc	    Windows application for testing the creation of a window through use of the Windows API.
     \author     Jacob Gosse
     \date       September 1, 2025
@@ -22,20 +22,20 @@
     limitations under the License.
 */
 
-#include "Window.hpp"
+#include <Window/Window.hpp>
+#include "debug.h"
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
     try
     {
-        // allocate console
         if (AllocConsole())
         {
-            // redirect console input/output
             FILE* dummyStream = nullptr;
             freopen_s(&dummyStream, "CONOUT$", "w", stdout);    // Redirect stdout
             freopen_s(&dummyStream, "CONIN$", "r", stdin);      // Redirect stdin
             freopen_s(&dummyStream, "CONOUT$", "w", stderr);    // Redirect stderr
+            std::wcout << L"Console successfully allocated." << L'\n';
         }
         else
         {
@@ -43,18 +43,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
         }
 
         #if defined(_DEBUG) && defined(_WIN32)
-        {
-            // enable CRT memory leak checking
-            int dbgFlags = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
-            dbgFlags |= _CRTDBG_CHECK_ALWAYS_DF;
-            dbgFlags |= _CRTDBG_DELAY_FREE_MEM_DF;
-            dbgFlags |= _CRTDBG_LEAK_CHECK_DF;
-            _CrtSetDbgFlag(dbgFlags);
-
-            // redirect leak warnings to console and debug window
-            _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG | _CRTDBG_MODE_FILE);
-            _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);
-        }
+        ENABLE_CRT_LEAK_CHECKING;       // enable memory leak checking
+        const char* msg1 = "p1 points to a Normal allocation block";
+        const char* msg2 = "p2 points to a Client allocation block";
+        char* p1 = (char*)_malloc_dbg(strlen(msg1) + 1, _NORMAL_BLOCK, __FILE__, __LINE__);
+        char* p2 = (char*)_malloc_dbg(strlen(msg2) + 1, _CLIENT_BLOCK, __FILE__, __LINE__);
+        _free_dbg(p1, _NORMAL_BLOCK);
+        _free_dbg(p2, _CLIENT_BLOCK);
+        DISABLE_CRT_DELAY_FREE_MEM_DF;  // disable the delay of freeing memory
         #endif
 
         // construct window
@@ -68,7 +64,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
             //std::wcout << window->GetElapsed() << L'\n';
 
             /*
-            This is where the main loop logic or call to a update/render loop occurs.
+            This is where the main loop logic or call to a update/render loop resides.
             For example:
                 obj->Update(window->GetWindow(), elapsedTime);
                 obj->Render(window->GetWindow());
@@ -82,11 +78,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
         window = nullptr;
 
         // dump memory leaks if any occurred
+        #if defined(_DEBUG) && defined(_WIN32)
         std::wcout << L'\n';
         if (!_CrtDumpMemoryLeaks())
         {
             std::wcout << L"No memory leaks detected." << std::endl;
         }
+        #endif
 
         std::wcout << L"\nProgram finished. Press any key to continue..." << std::endl;
         _getch(); // Waits for a single character input

@@ -1,3 +1,5 @@
+// debug.h : win32 debug file
+
 #pragma once
 
 #ifndef DEBUG_H_
@@ -8,8 +10,8 @@
 
 #define _CRTDBG_MAP_ALLOC
 
-#ifdef _CRTDBG_MAP_ALLOC
-#define ENABLE_CRT_LEAK_CHECKING\
+    #ifdef _CRTDBG_MAP_ALLOC
+        #define ENABLE_CRT_LEAK_CHECKING\
             do {\
                 int newFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);\
                 newFlag |= _CRTDBG_CHECK_ALWAYS_DF;\
@@ -20,20 +22,20 @@
                 _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);\
             } while (0)
 
-#define ENABLE_CRT_DELAY_FREE_MEM_DF\
+        #define ENABLE_CRT_DELAY_FREE_MEM_DF\
             do {\
                 int newFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);\
                 newFlag |= _CRTDBG_DELAY_FREE_MEM_DF;\
                 _CrtSetDbgFlag(newFlag);\
             } while (0)
 
-#define DISABLE_CRT_DELAY_FREE_MEM_DF\
+        #define DISABLE_CRT_DELAY_FREE_MEM_DF\
             do {\
                 int newFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);\
                 newFlag &= ~_CRTDBG_DELAY_FREE_MEM_DF;\
                 _CrtSetDbgFlag(newFlag);\
             } while (0)
-#endif
+    #endif
 
 #else
 #define ENABLE_CRT_LEAK_CHECKING    ((void)0)

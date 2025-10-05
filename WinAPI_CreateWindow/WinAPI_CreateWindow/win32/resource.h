@@ -68,4 +68,4 @@ ID Range		Description
 #endif
 #endif
 
-#endif // end of #ifndef RESOURCE_H_
+#endif

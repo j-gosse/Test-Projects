@@ -5,8 +5,8 @@
 
 #define MAX_LOADSTRING 100
 
-#include "framework.h"
-#include "resource.h"
+#include <win32/framework.h>
+#include <win32/resource.h>
 
 class Window
 {

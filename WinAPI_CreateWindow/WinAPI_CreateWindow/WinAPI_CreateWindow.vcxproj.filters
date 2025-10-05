@@ -22,45 +22,54 @@
     <Filter Include="Source Files\win32">
       <UniqueIdentifier>{5fd6c065-ba3c-4852-b764-b48c2d24ffa5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Window">
+      <UniqueIdentifier>{09aa80e8-4ae2-4540-b23e-40b5168af2a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Window">
+      <UniqueIdentifier>{52d8f4fb-e636-4208-b4d2-8154b7c1e2e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="win32_platform.cpp">
+    <ClCompile Include="win32\win32_platform.cpp">
       <Filter>Source Files\win32</Filter>
     </ClCompile>
-    <ClCompile Include="Window.cpp">
-      <Filter>Source Files\win32</Filter>
+    <ClCompile Include="Window\Window.cpp">
+      <Filter>Source Files\Window</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
+    <ClInclude Include="win32\debug.h">
       <Filter>Header Files\win32</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
+    <ClInclude Include="win32\framework.h">
       <Filter>Header Files\win32</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
+    <ClInclude Include="win32\resource.h">
       <Filter>Header Files\win32</Filter>
     </ClInclude>
-    <ClInclude Include="Window.hpp">
+    <ClInclude Include="win32\targetver.h">
       <Filter>Header Files\win32</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="primary.ico">
-      <Filter>Resource Files\icons</Filter>
-    </Image>
-    <Image Include="small.ico">
-      <Filter>Resource Files\icons</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="resource_script.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
+    <ClInclude Include="Window\Window.hpp">
+      <Filter>Header Files\Window</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="NOTICE.txt">
       <Filter>Source Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="res\resource_script.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\icons\primary.ico">
+      <Filter>Resource Files\icons</Filter>
+    </Image>
+    <Image Include="res\icons\small.ico">
+      <Filter>Resource Files\icons</Filter>
+    </Image>
   </ItemGroup>
 </Project>
