@@ -102,7 +102,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_CLOSE:
 		std::wcout << L"CASE: WM_CLOSE" << L'\n';
-		if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"Windows App", MB_OKCANCEL) == IDOK)
+		if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"WinAPI_CreateWindow", MB_OKCANCEL) == IDOK)
 		{
 			Window::Cleanup();
 		}
@@ -117,7 +117,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			return 0;
 		case IDM_EXIT:
 			std::wcout << L"CASE: IDM_EXIT" << L'\n';
-			if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"Windows App", MB_OKCANCEL) == IDOK)
+			if (MessageBoxW(m_hWindow, L"Do you wish to exit?", L"WinAPI_CreateWindow", MB_OKCANCEL) == IDOK)
 			{
 				Window::Cleanup();
 			}

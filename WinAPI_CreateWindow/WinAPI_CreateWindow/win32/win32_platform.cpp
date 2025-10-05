@@ -35,7 +35,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
             freopen_s(&dummyStream, "CONOUT$", "w", stdout);    // Redirect stdout
             freopen_s(&dummyStream, "CONIN$", "r", stdin);      // Redirect stdin
             freopen_s(&dummyStream, "CONOUT$", "w", stderr);    // Redirect stderr
-            std::wcout << L"Console successfully allocated." << L'\n';
         }
         else
         {
@@ -44,19 +43,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
         #if defined(_DEBUG) && defined(_WIN32)
         ENABLE_CRT_LEAK_CHECKING;       // enable memory leak checking
-        const char* msg1 = "p1 points to a Normal allocation block";
-        const char* msg2 = "p2 points to a Client allocation block";
-        char* p1 = (char*)_malloc_dbg(strlen(msg1) + 1, _NORMAL_BLOCK, __FILE__, __LINE__);
-        char* p2 = (char*)_malloc_dbg(strlen(msg2) + 1, _CLIENT_BLOCK, __FILE__, __LINE__);
-        _free_dbg(p1, _NORMAL_BLOCK);
-        _free_dbg(p2, _CLIENT_BLOCK);
         DISABLE_CRT_DELAY_FREE_MEM_DF;  // disable the delay of freeing memory
         #endif
 
-        // construct window
         std::unique_ptr<Window, std::default_delete<Window>> window = std::make_unique<Window>(hInstance);
-
-        // main loop
         UINT wMsgFilterMin = 0;
         UINT wMsgFilterMax = 0;
         while (window->ProcessMessages(wMsgFilterMin, wMsgFilterMax))
@@ -73,11 +63,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
             Sleep(16);  // simulate ~60 FPS
         }
 
-        // destroy window
         window.reset();
         window = nullptr;
 
-        // dump memory leaks if any occurred
         #if defined(_DEBUG) && defined(_WIN32)
         std::wcout << L'\n';
         if (!_CrtDumpMemoryLeaks())
