@@ -22,19 +22,25 @@
     <Filter Include="Source Files\win32">
       <UniqueIdentifier>{5fd6c065-ba3c-4852-b764-b48c2d24ffa5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Window">
+    <Filter Include="Source Files\win32\Window">
+      <UniqueIdentifier>{52d8f4fb-e636-4208-b4d2-8154b7c1e2e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\win32\Window">
       <UniqueIdentifier>{09aa80e8-4ae2-4540-b23e-40b5168af2a5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Window">
-      <UniqueIdentifier>{52d8f4fb-e636-4208-b4d2-8154b7c1e2e4}</UniqueIdentifier>
+    <Filter Include="Header Files\win32\Console">
+      <UniqueIdentifier>{b8960359-229e-4997-9552-8a977454d611}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\win32\Console">
+      <UniqueIdentifier>{12919cf8-f938-47de-ac97-7ccf2faf9a2a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win32\win32_platform.cpp">
       <Filter>Source Files\win32</Filter>
     </ClCompile>
-    <ClCompile Include="Window\Window.cpp">
-      <Filter>Source Files\Window</Filter>
+    <ClCompile Include="win32\Window\Window.cpp">
+      <Filter>Source Files\win32\Window</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -50,8 +56,8 @@
     <ClInclude Include="win32\targetver.h">
       <Filter>Header Files\win32</Filter>
     </ClInclude>
-    <ClInclude Include="Window\Window.hpp">
-      <Filter>Header Files\Window</Filter>
+    <ClInclude Include="win32\Window\Window.hpp">
+      <Filter>Header Files\win32\Window</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

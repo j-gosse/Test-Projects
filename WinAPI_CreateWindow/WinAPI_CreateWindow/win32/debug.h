@@ -1,14 +1,8 @@
 // debug.h : win32 debug file, currently focuses on memory leak checking
 
 /*
-    Example Usage:
-
-    const char* msg1 = "p1 points to a Normal allocation block";
-    const char* msg2 = "p2 points to a Client allocation block";
-    char* p1 = (char*)_malloc_dbg(strlen(msg1) + 1, _NORMAL_BLOCK, __FILE__, __LINE__);
-    char* p2 = (char*)_malloc_dbg(strlen(msg2) + 1, _CLIENT_BLOCK, __FILE__, __LINE__);
-    _free_dbg(p1, _NORMAL_BLOCK);
-    _free_dbg(p2, _CLIENT_BLOCK);
+    _CrtSetDbgFlag Example Usage:
+    https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/crtsetdbgflag?view=msvc-170
 */
 
 #pragma once

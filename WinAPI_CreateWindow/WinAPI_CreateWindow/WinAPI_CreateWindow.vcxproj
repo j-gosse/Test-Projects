@@ -130,14 +130,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="win32\win32_platform.cpp" />
-    <ClCompile Include="Window\Window.cpp" />
+    <ClCompile Include="win32\Window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="win32\debug.h" />
     <ClInclude Include="win32\framework.h" />
     <ClInclude Include="win32\resource.h" />
     <ClInclude Include="win32\targetver.h" />
-    <ClInclude Include="Window\Window.hpp" />
+    <ClInclude Include="win32\Window\Window.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="NOTICE.txt" />
